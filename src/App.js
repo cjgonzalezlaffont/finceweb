@@ -11,25 +11,28 @@ import { Header } from "./Components/Utils/Header";
 import { Footer } from "./Components/Utils/Footer";
 import { Ingresar } from "./Components/Utils/Ingresar";
 import { Registrar } from "./Components/Utils/Registrar";
+import { Categorias } from "./Components/Utils/Categorias";
+
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { Route, Routes } from "react-router-dom";
+import { Movimientos } from "./Components/Utils/Movimientos";
 
 function App() {
   return (
-    <Container fluid>
+    <Container fluid className="h-100 w-100">
       <Row>
         <Col>
           <Header className="fixed-top w-100" />
         </Col>
       </Row>
       <Row>
-        <Col md={2} p-0>
-          <Container fluid p-0>
-            <Menu className="fixed" />
+        <Col className="col-2 m-0">
+          <Container fluid className="mt-3">
+            <Menu className=" pb-1" />
           </Container>
         </Col>
-        <Col md={10}>
+        <Col className="col-10 m-0 pt-4 pb-4">
           <Container fluid>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -41,6 +44,8 @@ function App() {
               <Route path="/Inicio" element={<Inicio />} />
               <Route path="/Ingresar" element={<Ingresar />} />
               <Route path="/Registrar" element={<Registrar />} />
+              <Route path="/Categorias" element={<Categorias />} />
+              <Route path="/Movimientos" element={<Movimientos />} />
             </Routes>
           </Container>
         </Col>

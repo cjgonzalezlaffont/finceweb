@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 
 const CardPresupuesto = ({ datos }) => {
   return (
-    <Container>
+    <Container className="mb-5">
       <Card className="bg-primary text-white mb-3 rounded-top">
         <Card.Body className="p-3">
           <div className="row">

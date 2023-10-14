@@ -89,7 +89,7 @@ export const Cartera = () => {
   ];
 
   return (
-    <Container>
+    <Container className="mb-5">
       <TablaCartera data={datos} />
     </Container>
   );

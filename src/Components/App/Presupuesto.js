@@ -1,5 +1,7 @@
 import React from "react";
 import CardPresupuesto from "../Utils/CardPresupuesto";
+import { Row, Col, Button, Container } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export const Presupuesto = () => {
   //fetch
@@ -127,5 +129,26 @@ export const Presupuesto = () => {
     },
   ];
 
-  return <CardPresupuesto datos={datosPresupuesto} />;
+  return (
+    <Container>
+      <Row>
+        <Col className="m-3">
+          <Link to="/Movimientos">
+            <Button variant="primary">Agregar Movimiento</Button>
+          </Link>
+        </Col>
+        <Col className="m-3">
+          <Link to="/Categorias">
+            <Button variant="primary">Ver Categorías</Button>
+          </Link>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          <CardPresupuesto datos={datosPresupuesto} />
+        </Col>
+      </Row>
+    </Container>
+  );
 };
