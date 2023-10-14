@@ -1,50 +1,56 @@
-//import logo from "./logo.svg";
 import "./App.css";
 import { Home } from "./Components/Home/Home";
-import { Cartera } from "./Components/Fince/Cartera";
-import { Configuracion } from "./Components/Fince/Configuracion";
-import { Inicio } from "./Components/Fince/Inicio";
-import { Objetivos } from "./Components/Fince/Objetivos";
-import { PanelGeneral } from "./Components/Fince/PanelGeneral";
-import { Presupuesto } from "./Components/Fince/Presupuesto";
-import { Menu } from "./Components/Menu/Menu";
-import { Header } from "./Components/Header/Header";
-import { Footer } from "./Components/Footer/Footer";
+import { Cartera } from "./Components/App/Cartera";
+import { Configuracion } from "./Components/App/Configuracion";
+import { Inicio } from "./Components/App/Inicio";
+import { Objetivos } from "./Components/App/Objetivos";
+import { PanelGeneral } from "./Components/App/PanelGeneral";
+import { Presupuesto } from "./Components/App/Presupuesto";
+import { Menu } from "./Components/Utils/Menu";
+import { Header } from "./Components/Utils/Header";
+import { Footer } from "./Components/Utils/Footer";
+import { Ingresar } from "./Components/Utils/Ingresar";
+import { Registrar } from "./Components/Utils/Registrar";
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <div className="d-flex flex-column" style={{ height: "100vh" }}>
-      <Header />
-      <Container fluid className="flex-grow-1">
-        {/* Contenedor de toda la pagina */}
-        <Row className="h-100">
-          {/* Desplegamos un menu (2 col disp med / 12 disp. peq.) */}
-          <Col xs={12} md={2} className="bg-light">
-            {/* Aca va menú vertical */}
-            <Menu />
-          </Col>
-          {/* Acá va Contenido (10 col. disp. med / 12 col. disp. peq.) */}
-          <Col xs={12} md={10}>
-            {/* Acá va el contenido que cambia según el menú */}
-            <main className="h-100">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/cartera" element={<Cartera />} />
-                <Route path="/Presupuesto" element={<Presupuesto />} />
-                <Route path="/PanelGeneral" element={<PanelGeneral />} />
-                <Route path="/Objetivos" element={<Objetivos />} />
-                <Route path="/Configuracion" element={<Configuracion />} />
-                <Route path="/Inicio" element={<Inicio />} />
-              </Routes>
-            </main>
-          </Col>
-        </Row>
-      </Container>
-      <Footer />
-    </div>
+    <Container fluid>
+      <Row>
+        <Col>
+          <Header className="fixed-top w-100" />
+        </Col>
+      </Row>
+      <Row>
+        <Col md={2} p-0>
+          <Container fluid p-0>
+            <Menu className="fixed" />
+          </Container>
+        </Col>
+        <Col md={10}>
+          <Container fluid>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/cartera" element={<Cartera />} />
+              <Route path="/Presupuesto" element={<Presupuesto />} />
+              <Route path="/PanelGeneral" element={<PanelGeneral />} />
+              <Route path="/Objetivos" element={<Objetivos />} />
+              <Route path="/Configuracion" element={<Configuracion />} />
+              <Route path="/Inicio" element={<Inicio />} />
+              <Route path="/Ingresar" element={<Ingresar />} />
+              <Route path="/Registrar" element={<Registrar />} />
+            </Routes>
+          </Container>
+        </Col>
+      </Row>
+      <Row className="fixed-bottom w-100">
+        <Col>
+          <Footer />
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
