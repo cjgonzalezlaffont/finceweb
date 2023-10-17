@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 export const Menu = () => {
   return (
     <Nav
-      className="d-flex flex-column border pt-5 pb-5 ps-3 bg-primary"
+      className="d-flex flex-column bg-primary h-100 pt-5 pb-5 ps-3  border"
       style={{ borderTopRightRadius: "40px" }}
     >
       <NavItem className="flex-grow-1 mt-5 mb-5">

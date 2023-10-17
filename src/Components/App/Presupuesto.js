@@ -143,7 +143,6 @@ export const Presupuesto = () => {
           </Link>
         </Col>
       </Row>
-
       <Row>
         <Col>
           <CardPresupuesto datos={datosPresupuesto} />

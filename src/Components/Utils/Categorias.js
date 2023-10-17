@@ -11,7 +11,6 @@ import {
 
 export const Categorias = () => {
   const [categorias, setCategorias] = useState([
-    //fetch
     "Alimentos",
     "Transporte",
     "Vivienda",

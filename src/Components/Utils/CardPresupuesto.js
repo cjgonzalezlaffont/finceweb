@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 
 const CardPresupuesto = ({ datos }) => {
   return (
-    <Container className="mb-5">
+    <Container className="mb-4">
       <Card className="bg-primary text-white mb-3 rounded-top">
         <Card.Body className="p-3">
           <div className="row">
@@ -24,8 +24,8 @@ const CardPresupuesto = ({ datos }) => {
         </Card.Body>
       </Card>
       {datos.map((fila, index) => (
-        <Card key={index} className="rounded">
-          <Card.Body className="p-1">
+        <Card key={index} className="mt-2 rounded">
+          <Card.Body className="p-0">
             <div className="row">
               <div className="col ps-4">{fila.nombre}</div>
               <div className="col">{fila.categoria}</div>
