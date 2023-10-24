@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare, faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import {
   Container,
   Row,
@@ -8,16 +10,26 @@ import {
   Modal,
   Form,
 } from "react-bootstrap";
+import Card from "react-bootstrap/Card";
 
 export const Categorias = () => {
-  const [categorias, setCategorias] = useState([
-    "Alimentos",
-    "Transporte",
-    "Vivienda",
-    "Entretenimiento",
-    "Salud",
-    "Educación",
-  ]);
+  const id = "NLUJ7tgp0jKsRivoglHx" //por ahora hardcodeado
+  const [categorias, setCategorias] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch("http://localhost:8080/categorias/" + id)
+      try {
+        const data = await response.json()
+        const categorias = data.categorias
+        setCategorias(categorias)
+      } catch(error) {
+
+      }
+    }
+    fetchData()
+  }, [])
+  
   const [nuevaCategoria, setNuevaCategoria] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [categoriaAEditar, setCategoriaAEditar] = useState("");
@@ -68,31 +80,56 @@ export const Categorias = () => {
           >
             Agregar Categoría
           </Button>
-          <ListGroup>
-            {categorias.map((categoria, index) => (
-              <ListGroup.Item
-                className="d-flex justify-content-between"
-                key={index}
-              >
-                {categoria}
-                <div>
-                  <Button
-                    className="me-1"
-                    variant="info"
-                    onClick={() => openEditModal(categoria)}
-                  >
-                    Editar
-                  </Button>
-                  <Button
-                    variant="danger"
-                    onClick={() => eliminarCategoria(categoria)}
-                  >
-                    Eliminar
-                  </Button>
+
+          <Container className="mb-4">
+            <Card className="bg-primary text-white mb-3 rounded-top">
+              <Card.Body className="p-3">
+                <div className="row">
+                  <div className="col">
+                    <strong>Nombre</strong>
+                  </div>
+                  <div className="col">
+                    <strong>Monto Maximo</strong>
+                  </div>
+                  <div className="col">
+                    <strong>Descripcion</strong>
+                  </div>
+                  <div className="col">
+                    <strong></strong>
+                  </div>
                 </div>
-              </ListGroup.Item>
+              </Card.Body>
+            </Card>
+            {categorias.map((categoria, index) => (
+              <Card key={index} className="mt-2 rounded" style={{height: '50px'}}>
+                <Card.Body className="p-2">
+                  <div className="row">
+                    <div className="col ps-4">{categoria.nombre}</div>
+                    <div className="col">{categoria.montoMax}</div>
+                    <div className="col">{categoria.descripcion}</div>
+                    <div className="col">
+                      <button
+                        className="me-1"
+                        style={{border:"none"}}
+                        variant="info"
+                        onClick={() => openEditModal(categoria)}
+                      >
+                        <FontAwesomeIcon icon={faPenToSquare} style={{color: "#1764e8",}}/> {/* Icono de edit */}
+                      </button>
+                      <button
+                        className="me-1"
+                        variant="info"
+                        style={{border:"none"}}
+                        onClick={() => eliminarCategoria(categoria)}
+                      >
+                        <FontAwesomeIcon icon={faTrashAlt} style={{color: "#f00000",}}/> {/* Icono de edit */}
+                      </button>
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
             ))}
-          </ListGroup>
+          </Container>
         </Col>
       </Row>
 
