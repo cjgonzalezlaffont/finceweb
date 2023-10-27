@@ -1,11 +1,12 @@
 import React from "react";
 import { Nav, NavItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import './Menu.css'
 
 export const Menu = () => {
   return (
     <Nav
-      className="d-flex flex-column bg-primary h-100 pt-5 pb-5 ps-3  border"
+      className="nav-container d-flex flex-column bg-primary h-100 pt-5 pb-5 ps-5 " 
       style={{ borderTopRightRadius: "40px" }}
     >
       <NavItem className="flex-grow-1 mt-5 mb-5">
@@ -41,3 +42,4 @@ export const Menu = () => {
     </Nav>
   );
 };
+
