@@ -7,7 +7,7 @@ export const Ingresar = () => {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState(null);
-
+  const loginUrl = "htttp://localhost:8080/api/users/login";
   const handleCorreoChange = (e) => {
     setCorreo(e.target.value);
   };

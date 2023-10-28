@@ -6,34 +6,29 @@ import { Inicio } from "./Components/App/Inicio";
 import { Objetivos } from "./Components/App/Objetivos";
 import { PanelGeneral } from "./Components/App/PanelGeneral";
 import { Presupuesto } from "./Components/App/Presupuesto";
-import { Menu } from "./Components/Utils/Menu";
+//import { Menu } from "./Components/Utils/Menu";
 import { Header } from "./Components/Utils/Header";
-import { Footer } from "./Components/Utils/Footer";
+//import { Footer } from "./Components/Utils/Footer";
 import { Ingresar } from "./Components/Utils/Ingresar";
 import { Registrar } from "./Components/Utils/Registrar";
 import { Categorias } from "./Components/Utils/Categorias";
-
-import React , {useState} from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Simbolo } from "./Components/Utils/Simbolo";
+//import React, { useState } from "react";
+import { Container, Row, Col /*, Button*/ } from "react-bootstrap";
 import { Route, Routes } from "react-router-dom";
 import { Movimientos } from "./Components/Utils/Movimientos";
 
 function App() {
-
-
   return (
     <Container fluid className="h-100 w-100">
       <Row>
         <Col>
-            <Header className="fixed-top w-100" />
-            
+          <Header className="fixed-top w-100" />
         </Col>
       </Row>
       <Row>
         <Col className="col-2 m-0">
-          <Container fluid className="mt-3">
-          
-          </Container>
+          <Container fluid className="mt-3"></Container>
         </Col>
         <Col className="col-10 m-0 pt-4 pb-4">
           <Container fluid>
@@ -49,11 +44,11 @@ function App() {
               <Route path="/Registrar" element={<Registrar />} />
               <Route path="/Categorias" element={<Categorias />} />
               <Route path="/Movimientos" element={<Movimientos />} />
+              <Route path="/Simbolo/:simbolo" element={<Simbolo />} />
             </Routes>
           </Container>
         </Col>
       </Row>
-      
     </Container>
   );
 }
