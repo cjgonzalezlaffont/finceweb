@@ -2,6 +2,8 @@ import React from 'react'
 import * as FaIcons from 'react-icons/fa'
 import * as AiIcons from 'react-icons/ai'
 import * as IoIcons from 'react-icons/io'
+import * as HiIcons from 'react-icons/hi2'
+import * as BiIcons from 'react-icons/bi'
 
 export const SidebarData = [
     {
@@ -19,7 +21,7 @@ export const SidebarData = [
     {
         title:"Presupuesto",
         path:"/Presupuesto",
-        icons: <IoIcons.IoIosPaper />,
+        icons: <BiIcons.BiSolidWallet />,
         cName:"nav-text",
     },
     {
@@ -31,13 +33,13 @@ export const SidebarData = [
     {
         title:"Objetivos",
         path:"/Objetivos",
-        icons: <IoIcons.IoIosPaper />,
+        icons: <FaIcons.FaBalanceScaleLeft />,
         cName:"nav-text",
     },
     {
         title:"Configuracion",
         path:"/Configuracion",
-        icons: <IoIcons.IoIosPaper />,
+        icons: <HiIcons.HiWrenchScrewdriver />,
         cName:"nav-text",
     }
 ]

@@ -18,6 +18,14 @@ function Navbar() {
           <Link to="#" className="menu-bars">
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
+          <nav className="ml-auto">
+            <Link to="/Ingresar" className="nav-link">
+              Ingresar
+            </Link>
+            <Link to="/Registrar" className="nav-link">
+              Registrarse
+            </Link>
+          </nav>
         </div>
         <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
           <ul className="nav-menu-items" onClick={showSidebar}>
