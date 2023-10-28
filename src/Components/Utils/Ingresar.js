@@ -14,8 +14,10 @@ export const Ingresar = () => {
 
   useEffect(() => {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
-    if (correo === "") {
+    if (
+      (correo === "" && contrasena === "") ||
+      (correo !== "" && emailPattern.test(correo))
+    ) {
       setError("");
     } else {
       if (!emailPattern.test(correo)) {
@@ -24,7 +26,7 @@ export const Ingresar = () => {
         setError("El correo electrónico válido");
       }
     }
-  }, [correo]);
+  }, [correo, contrasena]);
 
   const handleContrasenaChange = (e) => {
     setContrasena(e.target.value);
@@ -33,19 +35,22 @@ export const Ingresar = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8080/users/login", {
+      const response = await fetch(loginUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ correo: correo, contrasena: contrasena }),
       });
-
       if (response.status === 200) {
-        // Credenciales válidas, redirige al usuario.
-        //cargar el token
-        console.log("Validacion Exitosa!!");
-        navigate("/presupuesto");
+        const data = await response.json();
+        if (data) {
+          sessionStorage.setItem("token", JSON.stringify(data.token));
+          localStorage.setItem("mail", JSON.stringify(data.user.correo));
+          localStorage.setItem("usuarioId", data.userId);
+          console.log("Validacion Exitosa!!");
+          navigate("/presupuesto");
+        }
       } else {
         setError("Credenciales inválidas. Por favor, inténtalo de nuevo.");
       }
