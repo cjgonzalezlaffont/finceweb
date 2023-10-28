@@ -7,7 +7,7 @@ import { Objetivos } from "./Components/App/Objetivos";
 import { PanelGeneral } from "./Components/App/PanelGeneral";
 import { Presupuesto } from "./Components/App/Presupuesto";
 //import { Menu } from "./Components/Utils/Menu";
-import { Header } from "./Components/Utils/Header";
+import  Menu from "./Components/Utils/Menu";
 //import { Footer } from "./Components/Utils/Footer";
 import { Ingresar } from "./Components/Utils/Ingresar";
 import { Registrar } from "./Components/Utils/Registrar";
@@ -20,36 +20,23 @@ import { Movimientos } from "./Components/Utils/Movimientos";
 
 function App() {
   return (
-    <Container fluid className="h-100 w-100">
-      <Row>
-        <Col>
-          <Header className="fixed-top w-100" />
-        </Col>
-      </Row>
-      <Row>
-        <Col className="col-2 m-0">
-          <Container fluid className="mt-3"></Container>
-        </Col>
-        <Col className="col-10 m-0 pt-4 pb-4">
-          <Container fluid>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/cartera" element={<Cartera />} />
-              <Route path="/Presupuesto" element={<Presupuesto />} />
-              <Route path="/PanelGeneral" element={<PanelGeneral />} />
-              <Route path="/Objetivos" element={<Objetivos />} />
-              <Route path="/Configuracion" element={<Configuracion />} />
-              <Route path="/Inicio" element={<Inicio />} />
-              <Route path="/Ingresar" element={<Ingresar />} />
-              <Route path="/Registrar" element={<Registrar />} />
-              <Route path="/Categorias" element={<Categorias />} />
-              <Route path="/Movimientos" element={<Movimientos />} />
-              <Route path="/Simbolo/:simbolo" element={<Simbolo />} />
-            </Routes>
-          </Container>
-        </Col>
-      </Row>
-    </Container>
+    <>
+      <Menu />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/cartera" element={<Cartera />} />
+        <Route path="/Presupuesto" element={<Presupuesto />} />
+        <Route path="/PanelGeneral" element={<PanelGeneral />} />
+        <Route path="/Objetivos" element={<Objetivos />} />
+        <Route path="/Configuracion" element={<Configuracion />} />
+        <Route path="/Inicio" element={<Inicio />} />
+        <Route path="/Ingresar" element={<Ingresar />} />
+        <Route path="/Registrar" element={<Registrar />} />
+        <Route path="/Categorias" element={<Categorias />} />
+        <Route path="/Movimientos" element={<Movimientos />} />
+        <Route path="/Simbolo/:simbolo" element={<Simbolo />} />
+      </Routes>
+    </>
   );
 }
 
