@@ -37,16 +37,3 @@
   }
 }
 
-#menu {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-in-out; /* Puedes ajustar la duración y el efecto según tus preferencias. */
-}
-
-.visible {
-  transform: translateX(0); /* El menú se muestra en la posición normal */
-}
-
-.oculto {
-  transform: translateX(-100%); /* El menú se oculta hacia la izquierda */
-}

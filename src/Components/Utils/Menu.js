@@ -1,12 +1,14 @@
 import React from "react";
 import { Nav, NavItem } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import './Menu.css'
+import './Menu.css';
 
-export const Menu = () => {
+export const Menu = (dato) => {
+  let menuVisible = dato.headerAMenu + " nav-container d-flex flex-column bg-primary h-100 pt-5 pb-5 ps-5"
+
   return (
     <Nav
-      className="nav-container d-flex flex-column bg-primary h-100 pt-5 pb-5 ps-5 " 
+      className={menuVisible}
       style={{ borderTopRightRadius: "40px" }}
     >
       <NavItem className="flex-grow-1 mt-5 mb-5">

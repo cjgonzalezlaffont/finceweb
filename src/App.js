@@ -19,28 +19,20 @@ import { Route, Routes } from "react-router-dom";
 import { Movimientos } from "./Components/Utils/Movimientos";
 
 function App() {
-  const [menuVisible, setMenuVisible] = useState(false);
 
-  const toggleMenu = () => {
-    setMenuVisible(!menuVisible);
-  };
-  const menuClassName = `menu ${menuVisible ? 'visible' : ''}`
+
   return (
     <Container fluid className="h-100 w-100">
       <Row>
         <Col>
             <Header className="fixed-top w-100" />
-            <Button onClick={toggleMenu}>
-              {menuVisible ? 'Ocultar Menú' : 'Mostrar Menú'}
-            </Button>
+            
         </Col>
       </Row>
       <Row>
         <Col className="col-2 m-0">
           <Container fluid className="mt-3">
-          <div id= "menu" className={menuClassName}>
-            <Menu />
-          </div>
+          
           </Container>
         </Col>
         <Col className="col-10 m-0 pt-4 pb-4">

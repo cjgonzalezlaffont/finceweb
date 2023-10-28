@@ -81,10 +81,10 @@ export const Categorias = () => {
         console.log(error.message)
       }
       obtenerCategorias()
-      setCategoriaAEditar("");
-      setNuevaCategoria("");
       setShowModal(false);
       setEditMode(false);
+      setCategoriaAEditar("");
+      setNuevaCategoria("");
     }
   };
 

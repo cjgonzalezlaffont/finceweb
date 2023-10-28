@@ -1,10 +1,31 @@
 .nav-container {
-    width: 250px;
-    height: 100vh; /* Ocupa todo el alto del DOM */
-    overflow-y: auto; /* Hace que el contenido sea desplazable si es necesario */
-    position: fixed; /* Fija el menú en su lugar */
-    top: 60px; /* Alinea el menú en la parte superior */
-    left: 0; /* Alinea el menú a la izquierda */
-    /*z-index: 800; /* Controla la superposición del menú sobre otros elementos */
-    background-color: #0F4C75;
-  }
+  width: 250px;
+  height: 100vh;
+  /* Ocupa todo el alto del DOM */
+  overflow-y: auto;
+  /* Hace que el contenido sea desplazable si es necesario */
+  position: fixed;
+  /* Fija el menú en su lugar */
+  top: 60px;
+  /* Alinea el menú en la parte superior */
+  left: 0;
+  /* Alinea el menú a la izquierda */
+  /*z-index: 800; /* Controla la superposición del menú sobre otros elementos */
+  background-color: #0F4C75;
+}
+
+.menu {
+  /*max-height: 0;
+  overflow: hidden;*/
+  transition: max-width 5s ease-in-out !important;
+  /* Puedes ajustar la duración y el efecto según tus preferencias. */
+}
+
+.visible {
+  transform: translateX(0);
+}
+
+.oculto {
+  transform: translateX(-100%);
+  
+}
