@@ -7,7 +7,7 @@ export const Ingresar = () => {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState(null);
-  const loginUrl = "htttp://localhost:8080/api/users/login";
+  const loginUrl = "http://localhost:8080/api/users/login";
   const handleCorreoChange = (e) => {
     setCorreo(e.target.value);
   };
@@ -44,12 +44,14 @@ export const Ingresar = () => {
       });
       if (response.status === 200) {
         const data = await response.json();
+
         if (data) {
           sessionStorage.setItem("token", JSON.stringify(data.token));
+          console.log("el token es" + data.token);
           localStorage.setItem("mail", JSON.stringify(data.user.correo));
           localStorage.setItem("usuarioId", data.userId);
           console.log("Validacion Exitosa!!");
-          navigate("/presupuesto");
+          navigate("/Presupuesto");
         }
       } else {
         setError("Credenciales inválidas. Por favor, inténtalo de nuevo.");

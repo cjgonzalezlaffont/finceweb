@@ -1,10 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Card, Form, Button } from "react-bootstrap";
+import { Card, Form, Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 export const Registrar = () => {
   const navigate = useNavigate();
+  const urlCreateUser = "http://localhost:8080/api/users/";
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
@@ -45,107 +46,113 @@ export const Registrar = () => {
     }
   }, [formData.contrasena, formData.confirmContrasena]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // fetch
-    fetch("http://localhost:8080/users/new-user", {
-      method: "POST",
-      body: JSON.stringify({
-        //paso el formato del endpoint
-        nombre: formData.nombre,
-        apellido: formData.apellido,
-        correo: formData.correo,
-        contrasena: formData.contrasena,
-        perfil: "",
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          // navegar a panel general u otra page
-          navigate("/Ingresar");
-          console.log("CARGA OK");
-        } else {
-          // errores de internos back existencia del usuario por ej.
-          console.log("CARGA NO OK");
-        }
-      })
-      .catch((error) => {
-        // Manejar errores de red aquí
+    try {
+      const response = await fetch(urlCreateUser, {
+        method: "POST",
+        body: JSON.stringify({
+          nombre: formData.nombre,
+          apellido: formData.apellido,
+          correo: formData.correo,
+          contrasena: formData.contrasena,
+          //perfil: "",
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+
+      if (response.status === 201) {
+        const data = await response.json(); // Espera a que la respuesta se convierta en JSON
+
+        if (data) {
+          sessionStorage.setItem("token", JSON.stringify(data.token));
+          localStorage.setItem("mail", JSON.stringify(data.user.correo));
+          localStorage.setItem("usuarioId", data.userId);
+          console.log("Bienvenido a Fince!!");
+          navigate("/Presupuesto");
+        }
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
   return (
-    <Card className="w-50 mx-auto mt-1">
-      <Card.Body>
-        <Card.Title>Registro de Usuario</Card.Title>
-        <Form className="align-content-center" onSubmit={handleSubmit}>
-          <Form.Group controlId="nombre">
-            <Form.Label>Nombre</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Ingresa tu nombre"
-              value={formData.nombre}
-              name="nombre"
-              onChange={handleChange}
-            />
-          </Form.Group>
+    <Container
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: "100vh" }}
+    >
+      <Card className="w-50 mx-auto">
+        <Card.Body>
+          <Card.Title>Registro de Usuario</Card.Title>
+          <Form className="align-content-center" onSubmit={handleSubmit}>
+            <Form.Group controlId="nombre">
+              <Form.Label>Nombre</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingresa tu nombre"
+                value={formData.nombre}
+                name="nombre"
+                onChange={handleChange}
+              />
+            </Form.Group>
 
-          <Form.Group controlId="apellido" className="mt-2">
-            <Form.Label>Apellido</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Ingresa tu apellido"
-              value={formData.apellido}
-              name="apellido"
-              onChange={handleChange}
-            />
-          </Form.Group>
+            <Form.Group controlId="apellido" className="mt-2">
+              <Form.Label>Apellido</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingresa tu apellido"
+                value={formData.apellido}
+                name="apellido"
+                onChange={handleChange}
+              />
+            </Form.Group>
 
-          <Form.Group controlId="correo" className="mt-2">
-            <Form.Label>Correo Electrónico</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Ingresa tu correo electrónico"
-              value={formData.correo}
-              name="correo"
-              onChange={handleChange}
-            />
-            {emailError && <div className="text-danger">{emailError}</div>}
-          </Form.Group>
+            <Form.Group controlId="correo" className="mt-2">
+              <Form.Label>Correo Electrónico</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Ingresa tu correo electrónico"
+                value={formData.correo}
+                name="correo"
+                onChange={handleChange}
+              />
+              {emailError && <div className="text-danger">{emailError}</div>}
+            </Form.Group>
 
-          <Form.Group controlId="contrasena" className="mt-2">
-            <Form.Label>Contraseña</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Contraseña"
-              value={formData.contrasena}
-              name="contrasena"
-              onChange={handleChange}
-            />
-          </Form.Group>
+            <Form.Group controlId="contrasena" className="mt-2">
+              <Form.Label>Contraseña</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Contraseña"
+                value={formData.contrasena}
+                name="contrasena"
+                onChange={handleChange}
+              />
+            </Form.Group>
 
-          <Form.Group controlId="confirmContrasena" className="mt-2">
-            <Form.Label>Confirmación de Contraseña</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Confirmar contraseña"
-              value={formData.confirmContrasena}
-              name="confirmContrasena"
-              onChange={handleChange}
-            />
-            {passwordError && (
-              <div className="text-danger">{passwordError}</div>
-            )}
-          </Form.Group>
+            <Form.Group controlId="confirmContrasena" className="mt-2">
+              <Form.Label>Confirmación de Contraseña</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Confirmar contraseña"
+                value={formData.confirmContrasena}
+                name="confirmContrasena"
+                onChange={handleChange}
+              />
+              {passwordError && (
+                <div className="text-danger">{passwordError}</div>
+              )}
+            </Form.Group>
 
-          <Button variant="primary" type="submit" className="mt-3">
-            Registrarse
-          </Button>
-        </Form>
-      </Card.Body>
-    </Card>
+            <Button variant="primary" type="submit" className="mt-3">
+              Registrarse
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };

@@ -1,15 +1,20 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { SidebarData } from "../App/SidebarData";
+import { IconContext } from "react-icons";
+import { Button } from "react-bootstrap";
 import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
-import { Link } from "react-router-dom";
-import { SidebarData } from "../App/SidebarData";
 import "./Menu.css";
-import { IconContext } from "react-icons";
 
-function Navbar() {
+export function Menu() {
   const [sidebar, setSidebar] = useState(false);
-
+  const navigate = useNavigate();
   const showSidebar = () => setSidebar(!sidebar);
+  const handleLogout = () => {
+    sessionStorage.removeItem("token");
+    navigate("/");
+  };
 
   return (
     <>
@@ -19,12 +24,14 @@ function Navbar() {
             <FaIcons.FaBars onClick={showSidebar} />
           </Link>
           <nav className="ml-auto">
-            <Link to="/Ingresar" className="nav-link">
-              Ingresar
-            </Link>
-            <Link to="/Registrar" className="nav-link">
-              Registrarse
-            </Link>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleLogout}
+              className="me-5"
+            >
+              Salir
+            </Button>
           </nav>
         </div>
         <nav className={sidebar ? "nav-menu active" : "nav-menu"}>
@@ -50,5 +57,3 @@ function Navbar() {
     </>
   );
 }
-
-export default Navbar;
