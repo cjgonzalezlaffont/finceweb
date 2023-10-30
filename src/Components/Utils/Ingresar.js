@@ -42,9 +42,9 @@ export const Ingresar = () => {
         },
         body: JSON.stringify({ correo: correo, contrasena: contrasena }),
       });
+      console.log(response)
       if (response.status === 200) {
         const data = await response.json();
-
         if (data) {
           sessionStorage.setItem("token", JSON.stringify(data.token));
           console.log("el token es" + data.token);

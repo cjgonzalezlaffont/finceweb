@@ -5,19 +5,43 @@ import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 
 export const Categorias = () => {
-  const id = "NLUJ7tgp0jKsRivoglHx"; //por ahora hardcodeado
+  const id = localStorage.getItem("usuarioId"); //por ahora hardcodeado
   const [categorias, setCategorias] = useState([]);
+  const token = sessionStorage.getItem("token").toString()
 
   useEffect(() => {
     obtenerCategorias();
   }, []);
 
   const obtenerCategorias = async () => {
-    const response = await fetch("http://localhost:8080/categorias/" + id);
+    
     try {
-      const data = await response.json();
-      const categorias = data.categorias;
-      setCategorias(categorias);
+      const response = await fetch(
+        "http://localhost:8080/api/categories/" + id,
+        {
+          headers: {
+            Authorization :  'Bearer ' + token,
+          }
+        }
+      )
+      if (response.status == 201) {
+        console.log(token)
+        const data = await response.json();
+        if (data) {
+          const categorias = data;
+          setCategorias(categorias);
+        }
+      } else {
+        const errorResponse = await response.json();
+        if (errorResponse.error) {
+          console.error(`Error: ${response.status} ${errorResponse.error}`);
+          alert(`Error: ${response.status} ${errorResponse.error}`);
+        } else {
+          console.error(`Error: ${response.status} ${response.statusText}`);
+          alert(`Error: ${response.status} ${response.statusText}`);
+        }
+      }
+      
     } catch (error) {
       console.log(error.message);
     }
@@ -48,6 +72,7 @@ export const Categorias = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization" :  `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify(nuevaCategoria),
         }
@@ -82,6 +107,7 @@ export const Categorias = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "Authorization" :  `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify(categoriaEdit),
         }
@@ -112,6 +138,7 @@ export const Categorias = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          "Authorization" :  `Bearer ${localStorage.getItem("token")}`
         },
       }
     );
