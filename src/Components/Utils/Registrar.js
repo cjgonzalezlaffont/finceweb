@@ -1,10 +1,16 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Form, Button, Container } from "react-bootstrap";
+import { Modal, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { FaInfoCircle } from "react-icons/fa";
+import { descriptions } from "../../Assets/strings.js";
 
 export const Registrar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const tipoInversor = queryParams.get("tipoInversor");
   const urlCreateUser = "http://localhost:8080/api/users/";
   const [formData, setFormData] = useState({
     nombre: "",
@@ -12,10 +18,12 @@ export const Registrar = () => {
     correo: "",
     contrasena: "",
     confirmContrasena: "",
+    perfil: tipoInversor,
   });
-
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedPerfil, setSelectedPerfil] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,33 +47,35 @@ export const Registrar = () => {
       setPasswordError("");
     } else {
       if (formData.contrasena === formData.confirmContrasena) {
-        setPasswordError("Confirmacion ok!");
+        setPasswordError("Confirmación ok!");
       } else {
         setPasswordError("Confirme su contraseña");
       }
     }
   }, [formData.contrasena, formData.confirmContrasena]);
 
+  const handlePerfilSelection = (perfil) => {
+    setSelectedPerfil(perfil);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch(urlCreateUser, {
         method: "POST",
-        body: JSON.stringify({
-          nombre: formData.nombre,
-          apellido: formData.apellido,
-          correo: formData.correo,
-          contrasena: formData.contrasena,
-          //perfil: "",
-        }),
+        body: JSON.stringify(formData),
         headers: {
           "Content-Type": "application/json",
         },
       });
 
       if (response.status === 201) {
-        const data = await response.json(); // Espera a que la respuesta se convierta en JSON
-
+        const data = await response.json();
         if (data) {
           sessionStorage.setItem("token", JSON.stringify(data.token));
           localStorage.setItem("mail", JSON.stringify(data.user.correo));
@@ -73,9 +83,19 @@ export const Registrar = () => {
           console.log("Bienvenido a Fince!!");
           navigate("/Presupuesto");
         }
+      } else {
+        const errorResponse = await response.json();
+        if (errorResponse.error) {
+          console.error(`Error: ${response.status} ${errorResponse.error}`);
+          alert(`Error: ${response.status} ${errorResponse.error}`);
+        } else {
+          console.error(`Error: ${response.status} ${response.statusText}`);
+          alert(`Error: ${response.status} ${response.statusText}`);
+        }
       }
     } catch (error) {
       console.error(error.message);
+      alert(error.message);
     }
   };
 
@@ -147,12 +167,100 @@ export const Registrar = () => {
               )}
             </Form.Group>
 
+            <Row>
+              <Col>
+                <Form.Group controlId="perfil" className="mt-3">
+                  <Form.Label>Seleccione su Perfil de inversor:</Form.Label>
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col>
+                <Form.Group controlId="perfil" className="mt-2">
+                  <div className="mb-2">
+                    <label className="d-flex align-items-center">
+                      <input
+                        type="radio"
+                        name="perfil"
+                        value="conservador"
+                        checked={formData.perfil === "conservador"}
+                        onChange={handleChange}
+                      />{" "}
+                      <span className="ml-1">Conservador</span>
+                      <Button
+                        variant="link"
+                        className="btn-link"
+                        onClick={() => handlePerfilSelection("conservador")}
+                      >
+                        <FaInfoCircle />
+                      </Button>
+                    </label>
+                  </div>
+                </Form.Group>
+              </Col>
+
+              <Col>
+                <Form.Group controlId="perfil" className="mt-2">
+                  <div className="mb-2">
+                    <label className="d-flex align-items-center">
+                      <input
+                        type="radio"
+                        name="perfil"
+                        value="moderado"
+                        checked={formData.perfil === "moderado"}
+                        onChange={handleChange}
+                      />{" "}
+                      <span className="ml-2">Moderado</span>
+                      <Button
+                        variant="link"
+                        className="btn-link"
+                        onClick={() => handlePerfilSelection("moderado")}
+                      >
+                        <FaInfoCircle />
+                      </Button>
+                    </label>
+                  </div>
+                </Form.Group>
+              </Col>
+
+              <Col>
+                <Form.Group controlId="perfil" className="mt-2">
+                  <div className="mb-2">
+                    <label className="d-flex align-items-center">
+                      <input
+                        type="radio"
+                        name="perfil"
+                        value="arriesgado"
+                        checked={formData.perfil === "arriesgado"}
+                        onChange={handleChange}
+                      />{" "}
+                      <span className="ml-2">Arriesgado</span>
+                      <Button
+                        variant="link"
+                        className="btn-link"
+                        onClick={() => handlePerfilSelection("arriesgado")}
+                      >
+                        <FaInfoCircle />
+                      </Button>
+                    </label>
+                  </div>
+                </Form.Group>
+              </Col>
+            </Row>
+
             <Button variant="primary" type="submit" className="mt-3">
               Registrarse
             </Button>
           </Form>
         </Card.Body>
       </Card>
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Descripción del perfil {selectedPerfil}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{descriptions[selectedPerfil]}</Modal.Body>
+      </Modal>
     </Container>
   );
 };
