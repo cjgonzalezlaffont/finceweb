@@ -25,12 +25,12 @@ const CardPresupuesto = ({ datos }) => {
       </Card>
       {datos.map((fila, index) => (
         <Card key={index} className="mt-2 rounded">
-          <Card.Body className="p-0">
+          <Card.Body className="p-1">
             <div className="row">
-              <div className="col ps-4">{fila.nombre}</div>
-              <div className="col">{fila.categoria}</div>
+              <div className="col ps-4">{fila.titulo}</div>
+              <div className="col">{fila.categoriaNombre}</div>
               <div className="col">{fila.fecha}</div>
-              <div className="col">{fila.monto}</div>
+              <div className="col">{fila.montoConsumido}</div>
             </div>
           </Card.Body>
         </Card>
