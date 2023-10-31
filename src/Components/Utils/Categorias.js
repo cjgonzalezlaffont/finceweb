@@ -5,9 +5,11 @@ import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 
 export const Categorias = () => {
-  const id = localStorage.getItem("usuarioId"); //por ahora hardcodeado
+  const id = localStorage.getItem("usuarioId");
   const [categorias, setCategorias] = useState([]);
-  const token = sessionStorage.getItem("token").toString()
+  const token = sessionStorage.getItem("token");
+  const tokenWithoutQuotes = token.replace(/"/g, ""); // Elimina comillas si están presentes
+  const authorizationHeader = `Bearer ${tokenWithoutQuotes}`;
 
   useEffect(() => {
     obtenerCategorias();
@@ -20,12 +22,11 @@ export const Categorias = () => {
         "http://localhost:8080/api/categories/" + id,
         {
           headers: {
-            Authorization :  'Bearer ' + token,
+            Authorization : authorizationHeader
           }
         }
       )
-      if (response.status == 201) {
-        console.log(token)
+      if (response.status == 200) {
         const data = await response.json();
         if (data) {
           const categorias = data;
@@ -67,12 +68,12 @@ export const Categorias = () => {
       setNuevaCategoria("");
 
       const response = await fetch(
-        "http://localhost:8080/categorias/new-categorie/" + id,
+        "http://localhost:8080/api/categories/" + id,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization" :  `Bearer ${localStorage.getItem("token")}`,
+            Authorization :  authorizationHeader,
           },
           body: JSON.stringify(nuevaCategoria),
         }
@@ -92,14 +93,15 @@ export const Categorias = () => {
 
   const editarCategoria = async () => {
     if (nuevaCategoria) {
-      //setNuevaCategoria("");
       const categoriaEdit = {
-        montoMax: nuevaCategoria.montoMax,
+        nombre : nuevaCategoria.nombre,
+        montoMax: parseFloat(nuevaCategoria.montoMax),
         descripcion: nuevaCategoria.descripcion,
         tipo: nuevaCategoria.tipo,
       };
+      console.log("Cat: " + nuevaCategoria.id + "User: " + id)
       const response = await fetch(
-        "http://localhost:8080/categorias/edit-categorie/" +
+        "http://localhost:8080/api/categories/update/" +
           id +
           "/" +
           nuevaCategoria.id,
@@ -107,15 +109,24 @@ export const Categorias = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization" :  `Bearer ${localStorage.getItem("token")}`,
+            Authorization :  authorizationHeader,
           },
           body: JSON.stringify(categoriaEdit),
         }
       );
       try {
-        const data = await response.json();
-        if (!data.success) {
-          throw new Error(data.message);
+
+        if (response.status == 200) {
+          console.log("Update exitoso")
+        } else {
+          const errorResponse = await response.json();
+          if (errorResponse.error) {
+            console.log(`Error: ${response.status} ${errorResponse.error}`);
+            alert(`Error: ${response.status} ${errorResponse.error}`);
+          } else {
+            console.log(`Error: ${response.status} ${response.statusText}`);
+            alert(`Error: ${response.status} ${response.statusText}`);
+          }
         }
       } catch (error) {
         console.log(error.message);
@@ -130,7 +141,7 @@ export const Categorias = () => {
 
   const eliminarCategoria = async (categoria) => {
     const response = await fetch(
-      "http://localhost:8080/categorias/delete-categorie/" +
+      "http://localhost:8080/api/categories/delete/" +
         id +
         "/" +
         categoria.id,
@@ -138,7 +149,7 @@ export const Categorias = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          "Authorization" :  `Bearer ${localStorage.getItem("token")}`
+          Authorization :  authorizationHeader
         },
       }
     );
