@@ -50,6 +50,34 @@ export const Presupuesto = () => {
     }
   };
 
+  const deleteTransaction = async (tran) => {
+    console.log(tran)
+      const response = await fetch(
+        "http://localhost:8080/api/transactions/deleteTransaction/" +
+          id +
+          "/" +
+          tran.id,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization :  authorizationHeader
+          },
+        }
+      );
+      try {
+        const data = await response.json();
+        if (data.status == 200) {
+          //navigate("/Presupuesto") 
+        } else {
+          throw new Error(data.message);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+      getTransactions();
+  }
+
   return (
     <Container>
       <Row className="mt-4">
@@ -82,7 +110,32 @@ export const Presupuesto = () => {
       </Row>
       <Row>
         <Col>
-          <CardPresupuesto datos={transactions} />
+          <Card className="bg-primary text-white mx-2 rounded-top">
+            <Card.Body className="p-3">
+              <div className="row">
+                <div className="col">
+                  <strong>Nombre</strong>
+                </div>
+                <div className="col">
+                  <strong>Categoría</strong>
+                </div>
+                <div className="col">
+                  <strong>Fecha</strong>
+                </div>
+                <div className="col">
+                  <strong>Monto</strong>
+                </div>
+                <div className="col-1">
+                  <strong></strong>
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
+          {transactions.map((tran, index) => (
+            <CardPresupuesto tran={tran}
+                             deleteTransaction={deleteTransaction}
+            />
+          ))}
         </Col>
       </Row>
       <Row >

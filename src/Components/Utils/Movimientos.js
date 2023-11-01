@@ -89,12 +89,6 @@ export const Movimientos = () => {
    
   };
 
-
-  const eliminarMovimiento = (index) => {
-    const nuevosMovimientos = movimientos.filter((_, i) => i !== index);
-    setMovimientos(nuevosMovimientos);
-  };
-
   return (
     <Container>
       <Row className="justify-content-center mt-4">
