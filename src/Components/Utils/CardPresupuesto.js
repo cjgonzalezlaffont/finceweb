@@ -1,6 +1,8 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 
 const CardPresupuesto = ({ datos }) => {
   return (
@@ -20,6 +22,9 @@ const CardPresupuesto = ({ datos }) => {
             <div className="col">
               <strong>Monto</strong>
             </div>
+            <div className="col-1">
+              <strong></strong>
+            </div>
           </div>
         </Card.Body>
       </Card>
@@ -31,6 +36,21 @@ const CardPresupuesto = ({ datos }) => {
               <div className="col">{fila.categoriaNombre}</div>
               <div className="col">{fila.fecha}</div>
               <div className="col">{fila.montoConsumido}</div>
+              <div className="col-1">
+                <button
+                  className="me-1"
+                  variant="info"
+                  style={{ border: "none", backgroundColor:"#fff" }}
+                  
+                  //onClick={() => eliminarCategoria(categoria)}
+                >
+                  <FontAwesomeIcon
+                    icon={faTrashAlt}
+                    style={{ color: "#f00000" }}
+                  />{" "}
+                  {/* Icono de borrar */}
+                </button>
+              </div>
             </div>
           </Card.Body>
         </Card>

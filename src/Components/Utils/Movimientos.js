@@ -1,52 +1,94 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Button, Form, Container, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Movimientos = () => {
+
+  const navigate = useNavigate();
+  const id = localStorage.getItem("usuarioId");
+  const token = sessionStorage.getItem("token");
+  const tokenWithoutQuotes = token.replace(/"/g, ""); // Elimina comillas si están presentes
+  const authorizationHeader = `Bearer ${tokenWithoutQuotes}`;
+
   const [movimientos, setMovimientos] = useState([]);
   const [nombre, setNombre] = useState("");
-  const [categoria, setCategoria] = useState("");
+  const [categoria, setCategoria] = useState({});
   const [fecha, setFecha] = useState("");
   const [monto, setMonto] = useState("");
-  const [editMode, setEditMode] = useState(false);
-  const [editIndex, setEditIndex] = useState(null);
+  const [categorias, setCategorias] = useState([]);
+  
+  useEffect(() => {
+    obtenerCategorias();
+  }, []);
 
-  const categoriasDisponibles = [
-    "Alimentos",
-    "Transporte",
-    "Vivienda",
-    "Entretenimiento",
-    "Salud",
-    "Educación",
-  ];
-
-  const agregarMovimiento = () => {
-    if (nombre && categoria && fecha && monto) {
-      if (editMode) {
-        const nuevosMovimientos = [...movimientos];
-        nuevosMovimientos[editIndex] = { nombre, categoria, fecha, monto };
-        setMovimientos(nuevosMovimientos);
-        setEditMode(false);
-        setEditIndex(null);
+  const obtenerCategorias = async () => {
+    
+    try {
+      const response = await fetch(
+        "http://localhost:8080/api/categories/" + id,
+        {
+          headers: {
+            Authorization : authorizationHeader
+          }
+        }
+      )
+      if (response.status == 200) {
+        const data = await response.json();
+        if (data) {
+          setCategorias(data)
+        }
       } else {
-        setMovimientos([...movimientos, { nombre, categoria, fecha, monto }]);
+        const errorResponse = await response.json();
+        if (errorResponse.error) {
+          console.error(`Error: ${response.status} ${errorResponse.error}`);
+          alert(`Error: ${response.status} ${errorResponse.error}`);
+        } else {
+          console.error(`Error: ${response.status} ${response.statusText}`);
+          alert(`Error: ${response.status} ${response.statusText}`);
+        }
       }
-      setNombre("");
-      setCategoria("");
-      setFecha("");
-      setMonto("");
+      
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
-  const editarMovimiento = (index) => {
-    const movimiento = movimientos[index];
-    setNombre(movimiento.nombre);
-    setCategoria(movimiento.categoria);
-    setFecha(movimiento.fecha);
-    setMonto(movimiento.monto);
-    setEditMode(true);
-    setEditIndex(index);
+  const agregarMovimiento = async () => {
+    if (nombre && categoria && fecha && monto) {
+      const selectedCategory = categorias.find((cat) => cat.nombre === categoria);
+      const newTransaction = {titulo: nombre, 
+                              categoriaNombre: selectedCategory.nombre, 
+                              fecha: fecha, 
+                              montoConsumido: monto,
+                              tipo: selectedCategory.tipo,
+                              categoriaId: selectedCategory.id}
+      console.log(newTransaction)
+
+      const response = await fetch(
+        "http://localhost:8080/api/transactions/createTransaction/" + id,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization :  authorizationHeader,
+          },
+          body: JSON.stringify(newTransaction),
+        }
+      );
+      try {
+        const data = await response.json();
+        if (data.status == 200) {
+          navigate("/Presupuesto") 
+        } else {
+          throw new Error(data.error);
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    }
+   
   };
+
 
   const eliminarMovimiento = (index) => {
     const nuevosMovimientos = movimientos.filter((_, i) => i !== index);
@@ -55,7 +97,7 @@ export const Movimientos = () => {
 
   return (
     <Container>
-      <Row className="justify-content-center">
+      <Row className="justify-content-center mt-4">
         <Col md={8}>
           <Card>
             <Card.Header>Movimientos Financieros</Card.Header>
@@ -73,13 +115,12 @@ export const Movimientos = () => {
                   <Form.Label>Categoría</Form.Label>
                   <Form.Control
                     as="select"
-                    value={categoria}
                     onChange={(e) => setCategoria(e.target.value)}
                   >
                     <option value="">Selecciona una categoría</option>
-                    {categoriasDisponibles.map((cat, index) => (
-                      <option key={index} value={cat}>
-                        {cat}
+                    {categorias.map((cat, index) => (
+                      <option key={index} value={cat.nombre}>
+                        {cat.nombre}
                       </option>
                     ))}
                   </Form.Control>
@@ -104,7 +145,7 @@ export const Movimientos = () => {
                   <Row className="d-flex mt-4 justify-content-between">
                     <Col>
                       <Button variant="primary" onClick={agregarMovimiento}>
-                        {editMode ? "Guardar Cambios" : "Agregar Movimiento"}
+                        {"Agregar Movimiento"}
                       </Button>
                     </Col>
                     <Col>
@@ -124,28 +165,6 @@ export const Movimientos = () => {
                   </Row>
                 </Form.Group>
               </Form>
-
-              <ul>
-                {movimientos.map((movimiento, index) => (
-                  <li key={index}>
-                    {`${movimiento.nombre} - ${movimiento.categoria} - ${movimiento.fecha} - $${movimiento.monto}`}
-                    <Button
-                      className="ml-2"
-                      variant="info"
-                      onClick={() => editarMovimiento(index)}
-                    >
-                      Editar
-                    </Button>
-                    <Button
-                      className="ml-2"
-                      variant="danger"
-                      onClick={() => eliminarMovimiento(index)}
-                    >
-                      Eliminar
-                    </Button>
-                  </li>
-                ))}
-              </ul>
             </Card.Body>
           </Card>
         </Col>

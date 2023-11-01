@@ -188,19 +188,19 @@ export const Categorias = () => {
             <Card className="bg-primary text-white mb-3 rounded-top">
               <Card.Body className="p-3">
                 <div className="row">
-                  <div className="col">
+                  <div className="col-2">
                     <strong>Nombre</strong>
                   </div>
-                  <div className="col">
+                  <div className="col-2">
                     <strong>Monto Maximo</strong>
                   </div>
                   <div className="col">
                     <strong>Descripcion</strong>
                   </div>
-                  <div className="col">
+                  <div className="col-2">
                     <strong>Tipo</strong>
                   </div>
-                  <div className="col">
+                  <div className="col-1">
                     <strong></strong>
                   </div>
                 </div>
@@ -214,21 +214,21 @@ export const Categorias = () => {
               >
                 <Card.Body className="p-2">
                   <div className="row">
-                    <div className="col ps-4">{categoria.nombre}</div>
-                    <div className="col">{categoria.montoMax}</div>
+                    <div className="col-2 ps-4">{categoria.nombre}</div>
+                    <div className="col-2">{categoria.montoMax}</div>
                     <div
                       className="col"
-                      style={{ maxHeight: "50px", overflow: "hidden" }}
+                      style={{ overflow: "hidden" }}
                     >
                       {categoria.descripcion}
                     </div>
-                    <div className="col">
+                    <div className="col-2">
                       {categoria.tipo ? "Ingreso" : "Egreso"}
                     </div>
-                    <div className="col">
+                    <div className="col-1">
                       <button
                         className="me-1"
-                        style={{ border: "none" }}
+                        style={{ border: "none", backgroundColor:"#fff" }}
                         variant="info"
                         onClick={() => openEditModal(categoria)}
                       >
@@ -241,7 +241,7 @@ export const Categorias = () => {
                       <button
                         className="me-1"
                         variant="info"
-                        style={{ border: "none" }}
+                        style={{ border: "none", backgroundColor:"#fff", marginLeft:"10px"}}
                         onClick={() => eliminarCategoria(categoria)}
                       >
                         <FontAwesomeIcon

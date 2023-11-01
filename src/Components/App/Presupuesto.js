@@ -52,16 +52,16 @@ export const Presupuesto = () => {
 
   return (
     <Container>
-      <Row>
+      <Row className="mt-4">
         <Col>
-          <Card className="mt-3" style={{width:"400px", borderRadius:"30px"}}>
+          <Card  style={{width:"400px", borderRadius:"30px"}}>
             <CardBody>
               <a>SALDO INGRESADO </a> <strong style={{color:"green"}}>${incomeAmount}</strong>
             </CardBody>
           </Card>
         </Col>
         <Col>
-          <Card className="mt-3" style={{width:"400px", borderRadius:"30px"}}>
+          <Card style={{width:"400px", borderRadius:"30px"}}>
             <CardBody>
               <a>SALDO EGRESADO </a> <strong style={{color:"red"}}>${expenseAmount}</strong>
             </CardBody>
@@ -83,6 +83,22 @@ export const Presupuesto = () => {
       <Row>
         <Col>
           <CardPresupuesto datos={transactions} />
+        </Col>
+      </Row>
+      <Row >
+        <Col>
+          <Card className="bg-primary text-white mx-2 rounded-top">
+            <Card.Body className="p-3">
+              <div className="row">
+                <div className="col-8">
+                  <strong>Total:</strong>
+                </div>
+                <div className="col" style={{marginLeft:"20px"}}>
+                  <strong>${incomeAmount - expenseAmount}</strong>
+                </div>
+              </div>
+            </Card.Body>
+          </Card>
         </Col>
       </Row>
     </Container>
