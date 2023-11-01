@@ -1,9 +1,9 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { BarChartComponent } from "../Utils/BarChartComponent.js";
+import { BarChartComponent } from "../Utils/InicioComponents/BarChartComponent";
 import { Card } from "react-bootstrap";
 import { dataBarChart, miniCardData } from "../../Assets/strings.js";
-import { MiniCardInicio } from "../Utils/MiniCardInicio.js";
+import { MiniCardInicio } from "../Utils/InicioComponents/MiniCardInicio.js";
 
 export const Inicio = () => {
   //fetch

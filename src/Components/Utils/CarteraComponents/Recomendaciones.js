@@ -1,11 +1,11 @@
 import React from "react";
-import { TablaCartera } from "../Utils/CarteraComponents/TablaCartera";
-import { datosCartera } from "../../Assets/strings.js";
+import { TablaRecomendaciones } from "./TablaRecomendaciones";
+import { datosRecomendaciones } from "../../../Assets/strings";
 import { Card, Container, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-export const Cartera = () => {
-  //aca va el fetch para datosCartera
+export const Recomendaciones = () => {
+  //aca va el fetch para datosRecomendaciones
 
   return (
     <Container className="mb-5">
@@ -15,14 +15,14 @@ export const Cartera = () => {
             as="h3"
             className="d-flex justify-content-between align-items-center"
           >
-            <span>Cartera</span>
-            <Link to="/Recomendaciones">
-              <Button variant="primary">Ir a Recomendaciones</Button>
+            <span>Recomendaciones</span>
+            <Link to="/Cartera">
+              <Button variant="primary">Volver a Cartera</Button>
             </Link>
           </Card.Title>
         </Card.Header>
         <Card.Body>
-          <TablaCartera data={datosCartera} />
+          <TablaRecomendaciones data={datosRecomendaciones} />
         </Card.Body>
       </Card>
     </Container>

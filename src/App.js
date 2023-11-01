@@ -14,6 +14,7 @@ import { Simbolo } from "./Components/Utils/Simbolo";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { Movimientos } from "./Components/Utils/Movimientos";
 import { useState, useEffect } from "react";
+import { Recomendaciones } from "./Components/Utils/CarteraComponents/Recomendaciones";
 
 export default function App() {
   const [token, setToken] = useState(sessionStorage.getItem("token"));
@@ -43,6 +44,7 @@ export default function App() {
             <Route path="/Categorias" element={<Categorias />} />
             <Route path="/Movimientos" element={<Movimientos />} />
             <Route path="/Simbolo/:simbolo" element={<Simbolo />} />
+            <Route path="/Recomendaciones" element={<Recomendaciones />} />
           </Routes>
         </>
       ) : (
