@@ -62,7 +62,6 @@ export const Movimientos = () => {
                               montoConsumido: monto,
                               tipo: selectedCategory.tipo,
                               categoriaId: selectedCategory.id}
-      console.log(newTransaction)
 
       const response = await fetch(
         "http://localhost:8080/api/transactions/createTransaction/" + id,
@@ -77,7 +76,8 @@ export const Movimientos = () => {
       );
       try {
         const data = await response.json();
-        if (data.status == 201) {
+        console.log(data)
+        if (response.status == 201) {
           navigate("/Presupuesto") 
         } else {
           throw new Error(data.error);

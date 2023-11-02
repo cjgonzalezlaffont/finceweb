@@ -3,8 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
+import { useNavigate } from "react-router-dom";
 
 export const Categorias = () => {
+  const navigate = useNavigate();
   const id = localStorage.getItem("usuarioId");
   const [categorias, setCategorias] = useState([]);
   const token = sessionStorage.getItem("token");
@@ -256,9 +258,16 @@ export const Categorias = () => {
               </Card>
             ))}
           </Container>
+          <Button
+            className="mb-3"
+            variant="primary"
+            onClick={() => navigate("/Presupuesto")}
+          >
+            Volver a presupuesto
+        </Button>
         </Col>
       </Row>
-
+      
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>

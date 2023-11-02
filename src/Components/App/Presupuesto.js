@@ -51,31 +51,45 @@ export const Presupuesto = () => {
   };
 
   const deleteTransaction = async (tran) => {
-    console.log(tran)
-      const response = await fetch(
-        "http://localhost:8080/api/transactions/deleteTransaction/" +
-          id +
-          "/" +
-          tran.id,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization :  authorizationHeader
-          },
-        }
-      );
-      try {
-        const data = await response.json();
-        if (data.status == 200) {
-          //navigate("/Presupuesto") 
-        } else {
-          throw new Error(data.message);
-        }
-      } catch (error) {
-        console.log(error.message);
+
+      const confirmacion = window.confirm("¿Está seguro que desea eliminar el registro?");
+
+      if (confirmacion) {
+        const deleteTransaction = {
+          titulo: tran.titulo, 
+          categoriaNombre: tran.categoriaNombre, 
+          fecha: tran.fecha, 
+          montoConsumido: tran.montoConsumido,
+          tipo: tran.tipo,
+          categoriaId: tran.categoriaId,
+          id: tran.id}
+    
+          const response = await fetch(
+            "http://localhost:8080/api/transactions/deleteTransaction/" +
+              id +
+              "/" +
+              tran.id,
+            {
+              method: "DELETE",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization :  authorizationHeader
+              },
+              body: JSON.stringify(deleteTransaction),
+            }
+          );
+          try {
+            const data = await response.json();
+            if (data.status == 200) {
+              alert("Transaccion eliminada con exito")
+            } else {
+              throw new Error(data.message);
+            }
+          } catch (error) {
+            console.log(error.message);
+          }
+          getTransactions();
       }
-      getTransactions();
   }
 
   return (
