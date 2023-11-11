@@ -42,15 +42,14 @@ export const Ingresar = () => {
         },
         body: JSON.stringify({ correo: correo, contrasena: contrasena }),
       });
-      console.log(response)
+      console.log(response);
       if (response.status === 200) {
         const data = await response.json();
         if (data) {
           sessionStorage.setItem("token", JSON.stringify(data.token));
-          console.log("el token es" + data.token);
           localStorage.setItem("mail", JSON.stringify(data.user.correo));
           localStorage.setItem("usuarioId", data.userId);
-          console.log("Validacion Exitosa!!");
+          console.log("Validacion Exitosa!");
           navigate("/Presupuesto");
         }
       } else {

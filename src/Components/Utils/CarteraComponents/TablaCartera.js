@@ -1,7 +1,14 @@
 import React from "react";
-import Table from "react-bootstrap/Table";
+import { Table, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 export const TablaCartera = ({ data }) => {
+  const navigate = useNavigate();
+
+  const handleButtonClick = (activo) => {
+    navigate(`/Simbolo/${activo.simbolo}`, { state: activo });
+  };
+
   return (
     <Table striped bordered hover responsive className="mt-2">
       <thead>
@@ -24,21 +31,29 @@ export const TablaCartera = ({ data }) => {
           <th>
             <strong>Valor Actual</strong>
           </th>
+          <th>
+            <strong>Detalles</strong>
+          </th>
         </tr>
       </thead>
       <tbody>
-        {data.map((fila, index) => (
+        {data.map((activo, index) => (
           <tr key={index}>
-            <td>{fila.simbolo}</td>
-            <td>{fila.nombre}</td>
-            <td>{fila.cantidad}</td>
-            <td>{fila.valorCompra}</td>
+            <td>{activo.simbolo}</td>
+            <td>{activo.nombre}</td>
+            <td>{activo.cantidad}</td>
+            <td>{activo.valorDeCompra}</td>
             <td
-              className={fila.variacion >= 0 ? "text-success" : "text-danger"}
+              className={activo.variacion >= 0 ? "text-success" : "text-danger"}
             >
-              {fila.variacion}%
+              {activo.variacion}%
             </td>
-            <td>{fila.valorActual}</td>
+            <td>{activo.valorActual}</td>
+            <td>
+              <Button variant="info" onClick={() => handleButtonClick(activo)}>
+                Ver Detalles
+              </Button>
+            </td>
           </tr>
         ))}
       </tbody>

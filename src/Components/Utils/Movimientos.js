@@ -3,82 +3,85 @@ import { Card, Button, Form, Container, Row, Col } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 export const Movimientos = () => {
-
   const navigate = useNavigate();
   const id = localStorage.getItem("usuarioId");
-  const token = sessionStorage.getItem("token");
-  const tokenWithoutQuotes = token.replace(/"/g, ""); // Elimina comillas si están presentes
-  const authorizationHeader = `Bearer ${tokenWithoutQuotes}`;
-
-  const [movimientos, setMovimientos] = useState([]);
+  const token = sessionStorage.getItem("token").replace(/"/g, "");
+  //const [movimientos, setMovimientos] = useState([]);
   const [nombre, setNombre] = useState("");
   const [categoria, setCategoria] = useState({});
   const [fecha, setFecha] = useState("");
   const [monto, setMonto] = useState("");
   const [categorias, setCategorias] = useState([]);
-  
-  useEffect(() => {
-    obtenerCategorias();
-  }, []);
 
-  const obtenerCategorias = async () => {
-    
-    try {
-      const response = await fetch(
-        "http://localhost:8080/api/categories/" + id,
-        {
-          headers: {
-            Authorization : authorizationHeader
+  useEffect(() => {
+    const obtenerCategorias = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/api/categories/" + id,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.status === 200) {
+          const data = await response.json();
+          if (data) {
+            setCategorias(data);
+          }
+        } else {
+          const errorResponse = await response.json();
+          if (errorResponse.error) {
+            console.error(`Error: ${response.status} ${errorResponse.error}`);
+            alert(`Error: ${response.status} ${errorResponse.error}`);
+          } else {
+            console.error(`Error: ${response.status} ${response.statusText}`);
+            alert(`Error: ${response.status} ${response.statusText}`);
           }
         }
-      )
-      if (response.status == 200) {
-        const data = await response.json();
-        if (data) {
-          setCategorias(data)
-        }
-      } else {
-        const errorResponse = await response.json();
-        if (errorResponse.error) {
-          console.error(`Error: ${response.status} ${errorResponse.error}`);
-          alert(`Error: ${response.status} ${errorResponse.error}`);
-        } else {
-          console.error(`Error: ${response.status} ${response.statusText}`);
-          alert(`Error: ${response.status} ${response.statusText}`);
-        }
+      } catch (error) {
+        console.log(error.message);
       }
-      
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+    };
+
+    const fetchData = async () => {
+      await obtenerCategorias();
+    };
+
+    fetchData();
+  }, [id, token, setCategorias]);
 
   const agregarMovimiento = async () => {
     if (nombre && categoria && fecha && monto) {
-      const selectedCategory = categorias.find((cat) => cat.nombre === categoria);
-      const newTransaction = {titulo: nombre, 
-                              categoriaNombre: selectedCategory.nombre, 
-                              fecha: fecha, 
-                              montoConsumido: monto,
-                              tipo: selectedCategory.tipo,
-                              categoriaId: selectedCategory.id}
+      const selectedCategory = categorias.find(
+        (cat) => cat.nombre === categoria
+      );
+      const newTransaction = {
+        titulo: nombre,
+        categoriaNombre: selectedCategory.nombre,
+        fecha: fecha,
+        montoConsumido: monto,
+        tipo: selectedCategory.tipo,
+        categoriaId: selectedCategory.id,
+      };
 
       const response = await fetch(
         "http://localhost:8080/api/transactions/createTransaction/" + id,
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
-            Authorization :  authorizationHeader,
           },
           body: JSON.stringify(newTransaction),
         }
       );
       try {
         const data = await response.json();
-        console.log(data)
-        if (response.status == 201) {
-          navigate("/Presupuesto") 
+        console.log(data);
+        if (response.status === 201) {
+          navigate("/Presupuesto");
         } else {
           throw new Error(data.error);
         }
@@ -86,7 +89,6 @@ export const Movimientos = () => {
         alert(error.message);
       }
     }
-   
   };
 
   return (

@@ -1,14 +1,43 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import { TablaCartera } from "../Utils/CarteraComponents/TablaCartera";
-import { datosCartera } from "../../Assets/strings.js";
 import { Card, Container, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export const Cartera = () => {
-  //aca va el fetch para datosCartera
+  const [carteraData, setCarteraData] = useState([]);
+  const urlPortfolio = "http://localhost:8080/api/portfolio/getPortfolio/";
+  const token = sessionStorage.getItem("token").replace(/"/g, "");
+  const userId = localStorage.getItem("usuarioId");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(urlPortfolio + userId, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data.portfolio);
+          setCarteraData(data.portfolio);
+        } else {
+          console.error("Error al obtener datos de la cartera");
+        }
+      } catch (error) {
+        console.error("Error en la solicitud:", error);
+      }
+    };
+
+    fetchData();
+  }, [token, userId]);
 
   return (
-    <Container className="mb-5">
+    <Container className="mb-5 mt-5">
       <Card>
         <Card.Header>
           <Card.Title
@@ -22,7 +51,7 @@ export const Cartera = () => {
           </Card.Title>
         </Card.Header>
         <Card.Body>
-          <TablaCartera data={datosCartera} />
+          <TablaCartera data={carteraData} />
         </Card.Body>
       </Card>
     </Container>
