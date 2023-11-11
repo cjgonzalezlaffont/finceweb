@@ -57,10 +57,17 @@ export const Movimientos = () => {
       const selectedCategory = categorias.find(
         (cat) => cat.nombre === categoria
       );
+
+      //Correccion en las fechas asi quedan las de los activos y las tx iguales.
+
+      const originalValue = fecha;
+      const [anio, mes, dia] = originalValue.split("-");
+      const fechaNuevoFormato = `${dia}/${mes}/${anio}`;
+
       const newTransaction = {
         titulo: nombre,
         categoriaNombre: selectedCategory.nombre,
-        fecha: fecha,
+        fecha: fechaNuevoFormato,
         montoConsumido: monto,
         tipo: selectedCategory.tipo,
         categoriaId: selectedCategory.id,

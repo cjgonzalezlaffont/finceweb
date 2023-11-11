@@ -6,7 +6,6 @@ export const Simbolo = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const simboloData = location.state;
-  console.log("simboldata SIMBOLO.JS");
   const urlCompraActivo = "http://localhost:8080/api/portfolio/buyAsset/";
   const urlVentaActivo = "http://localhost:8080/api/portfolio/sellAsset/";
   const userId = localStorage.getItem("usuarioId");
