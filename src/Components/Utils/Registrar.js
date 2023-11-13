@@ -10,7 +10,7 @@ export const Registrar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const tipoInversor = queryParams.get("tipoInversor");
+  //const tipoInversor = queryParams.get("tipoInversor");
   const urlCreateUser = "http://localhost:8080/api/users/";
   const [formData, setFormData] = useState({
     nombre: "",
@@ -18,7 +18,7 @@ export const Registrar = () => {
     correo: "",
     contrasena: "",
     confirmContrasena: "",
-    perfil: tipoInversor,
+    perfil: "",
   });
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -40,6 +40,14 @@ export const Registrar = () => {
         setEmailError("");
       }
     }
+  };
+
+  const handlePerfilChange = (e) => {
+    const { value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      perfil: value,
+    }));
   };
 
   useEffect(() => {
@@ -68,7 +76,13 @@ export const Registrar = () => {
     try {
       const response = await fetch(urlCreateUser, {
         method: "POST",
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          nombre: formData.nombre,
+          apellido: formData.apellido,
+          correo: formData.correo,
+          contrasena: formData.contrasena,
+          perfil: tipoInversor,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -185,7 +199,7 @@ export const Registrar = () => {
                         name="perfil"
                         value="conservador"
                         checked={formData.perfil === "conservador"}
-                        onChange={handleChange}
+                        onChange={handlePerfilChange}
                       />{" "}
                       <span className="ml-1">Conservador</span>
                       <Button
@@ -248,10 +262,11 @@ export const Registrar = () => {
                 </Form.Group>
               </Col>
             </Row>
-
-            <Button variant="primary" type="submit" className="mt-3">
-              Registrarse
-            </Button>
+            <Row>
+              <Button variant="primary" type="submit" className="mt-3">
+                Registrarse
+              </Button>
+            </Row>
           </Form>
         </Card.Body>
       </Card>
