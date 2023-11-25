@@ -1,100 +1,252 @@
-import React, { useState } from "react";
-import { Card, Form, Button, Row, Col, Container } from "react-bootstrap";
+import React, { useState, useEffect, useCallback } from "react";
+import Modal from "react-modal";
+import { Card, Button, Row, Col, Container, Form } from "react-bootstrap";
 
 export const Objetivos = () => {
-  const [fechaLimite, setFechaLimite] = useState("");
-  const [monto, setMonto] = useState("");
-  const [tituloObjetivo, setTituloObjetivo] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [notificacionesActivadas, setNotificacionesActivadas] = useState(false);
+  const urlObtenerObjetivos = "http://localhost:8080/api/objectives/";
+  const urlCrearObjetivo = "http://localhost:8080/api/objectives/newObjective/";
+  const urlEditarObjetivo =
+    "http://localhost:8080/api/objectives/updateObjective/";
+  const urlEliminarObjetivo =
+    "http://localhost:8080/api/objectives/deleteObjective/";
 
-  const handleNotificacionesChange = (e) => {
-    setNotificacionesActivadas(e.target.checked);
+  const token = sessionStorage.getItem("token").replace(/"/g, "");
+  const userId = localStorage.getItem("usuarioId");
+
+  const [objetivos, setObjetivos] = useState({ objetivos: [] });
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [formData, setFormData] = useState({
+    nombre: "",
+    descripcion: "",
+    monto: "",
+    fecha: "",
+    progreso: "",
+  });
+
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch(urlObtenerObjetivos + userId, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setObjetivos(data);
+      } else {
+        throw new Error("Network response was not ok");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, [token, userId, setObjetivos]);
+
+  useEffect(() => {
+    fetchData(); // Llamamos a fetchData al montar el componente
+  }, [fetchData]); // Dependencia del useEffect
+
+  const handleAgregarObjetivo = async () => {
+    try {
+      const response = await fetch(urlCrearObjetivo + userId, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        fetchData(); // Llamamos a fetchData después de agregar un objetivo
+        closeModal();
+      } else {
+        throw new Error("Network response was not ok");
+      }
+    } catch (error) {
+      console.error("Error adding objective:", error);
+    }
   };
 
-  const handleGuardarObjetivo = () => {};
+  useEffect(() => {
+    fetchData();
+  }, [token, userId, fetchData]);
+
+  const openModal = (index = null) => {
+    setEditingIndex(index);
+    setModalIsOpen(true);
+
+    if (index !== null) {
+      const objetivo = objetivos.objetivos[index];
+      setFormData({
+        objetivoId: objetivo.objetivoId,
+        nombre: objetivo.nombre,
+        descripcion: objetivo.descripcion,
+        monto: objetivo.monto,
+        fecha: objetivo.fecha,
+        progreso: objetivo.progreso,
+      });
+    } else {
+      setFormData({
+        nombre: "",
+        descripcion: "",
+        monto: "",
+        fecha: "",
+        progreso: "",
+      });
+    }
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleEditarObjetivo = async () => {
+    try {
+      const response = await fetch(`${urlEditarObjetivo}${userId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const newObjetivos = [...objetivos.objetivos];
+        newObjetivos[editingIndex] = formData;
+        setObjetivos({ objetivos: newObjetivos });
+        closeModal();
+      } else {
+        throw new Error("Network response was not ok");
+      }
+    } catch (error) {
+      console.error("Error editing objective:", error);
+    }
+  };
+
+  const handleEliminarObjetivo = async (objetivoId, index) => {
+    try {
+      const response = await fetch(
+        `${urlEliminarObjetivo}${userId}/${objetivoId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const newObjetivos = objetivos.objetivos.filter((_, i) => i !== index);
+        setObjetivos({ objetivos: newObjetivos });
+      } else {
+        throw new Error("Network response was not ok");
+      }
+    } catch (error) {
+      console.error("Error deleting objective:", error);
+    }
+  };
+
   return (
-    <Container
-      className="d-flex align-items-center justify-content-center"
-      style={{ minHeight: "100vh" }}
-    >
-      <Card>
-        <Card.Header as="h5">Establecer Objetivo Presupuestario</Card.Header>
-        <Card.Body>
-          <Form>
-            <Form.Group as={Row} controlId="tituloObjetivo">
-              <Form.Label column sm="4">
-                Título del Objetivo
-              </Form.Label>
-              <Col sm="8">
+    <Container className="mt-5 align-items-center justify-content-center">
+      <Button className="m-3" onClick={() => openModal()}>
+        Agregar Objetivo
+      </Button>
+      <Row xs={1} md={3} className="g-4 m-5">
+        {objetivos.objetivos.map((objetivo, index) => (
+          <Col key={index}>
+            <Card>
+              <Card.Body className="d-flex flex-column">
+                <Card.Title>{objetivo.nombre}</Card.Title>
+                <Card.Text>{objetivo.descripcion}</Card.Text>
+                <Card.Text>{objetivo.monto}</Card.Text>
+                <Card.Text>{objetivo.fecha}</Card.Text>
+                <Card.Text>{objetivo.progreso}%</Card.Text>
+                <div className="d-flex justify-content-between">
+                  <Button onClick={() => openModal(index)}>Editar</Button>
+                  <Button
+                    className="bg-danger"
+                    onClick={() =>
+                      handleEliminarObjetivo(objetivo.objetivoId, index)
+                    }
+                  >
+                    Eliminar
+                  </Button>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+
+      <Modal
+        className="col-12"
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+      >
+        <Container className="mt-3 d-flex align-items-center justify-content-center">
+          <Card className="m-5 col-5">
+            <Card.Body>
+              <Card.Title>
+                {editingIndex !== null ? "Editar" : "Agregar"} Objetivo
+              </Card.Title>
+              <Form>
+                <Form.Label>Nombre:</Form.Label>
                 <Form.Control
                   type="text"
-                  value={tituloObjetivo}
-                  onChange={(e) => setTituloObjetivo(e.target.value)}
+                  name="nombre"
+                  value={formData.nombre}
+                  onChange={handleInputChange}
                 />
-              </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} controlId="fechaLimite">
-              <Form.Label column sm="4">
-                Fecha Límite
-              </Form.Label>
-              <Col sm="8">
+                <Form.Label>Descripción:</Form.Label>
                 <Form.Control
-                  type="date"
-                  value={fechaLimite}
-                  onChange={(e) => setFechaLimite(e.target.value)}
+                  type="text"
+                  name="descripcion"
+                  value={formData.descripcion}
+                  onChange={handleInputChange}
                 />
-              </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} controlId="objetivoPesos">
-              <Form.Label column sm="4">
-                Monto
-              </Form.Label>
-              <Col sm="8">
+                <Form.Label>Monto:</Form.Label>
                 <Form.Control
-                  type="number"
-                  value={monto}
-                  onChange={(e) => setMonto(e.target.value)}
+                  type="text"
+                  name="monto"
+                  value={formData.monto}
+                  onChange={handleInputChange}
                 />
-              </Col>
-            </Form.Group>
-
-            <Form.Group as={Row} controlId="descripcion">
-              <Form.Label column sm="4">
-                Descripción
-              </Form.Label>
-              <Col sm="8">
+                <Form.Label>Fecha:</Form.Label>
                 <Form.Control
-                  as="textarea"
-                  rows={3}
-                  value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
+                  type="text"
+                  name="fecha"
+                  value={formData.fecha}
+                  onChange={handleInputChange}
                 />
-              </Col>
-            </Form.Group>
 
-            <Form.Group as={Row} controlId="notificaciones">
-              <Form.Label column sm="4">
-                Notificaciones
-              </Form.Label>
-              <Col sm="8">
-                <Form.Check
-                  type="checkbox"
-                  label="Activar notificaciones"
-                  checked={notificacionesActivadas}
-                  onChange={handleNotificacionesChange}
-                />
-              </Col>
-            </Form.Group>
-
-            <Button variant="primary" onClick={handleGuardarObjetivo}>
-              Guardar Objetivo
-            </Button>
-          </Form>
-        </Card.Body>
-      </Card>
+                <div className="d-flex justify-content-between m-3">
+                  <Button
+                    type="button"
+                    onClick={
+                      editingIndex !== null
+                        ? handleEditarObjetivo
+                        : handleAgregarObjetivo
+                    }
+                  >
+                    {editingIndex !== null ? "Editar" : "Agregar"}
+                  </Button>
+                  <Button onClick={closeModal}>Volver</Button>
+                </div>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Container>
+      </Modal>
     </Container>
   );
 };

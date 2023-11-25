@@ -76,7 +76,7 @@ export const Configuracion = () => {
       }
     }
     if (formData.contrasena === contrasena) {
-      setPasswordError("La contraseña ingresada ya fue utiliza");
+      setPasswordError("La contraseña ingresada ya fue utilizada");
     }
   }, [formData.contrasena, formData.confirmContrasena, contrasena]);
 
@@ -98,7 +98,7 @@ export const Configuracion = () => {
           nombre: formData.nombre,
           apellido: formData.apellido,
           correo: formData.correo,
-          contrasena: formData.contrasena,
+          contrasena: formData.contrasena || contrasena,
           perfil: formData.perfil,
         }),
       });
@@ -106,7 +106,7 @@ export const Configuracion = () => {
       if (response.status === 200) {
         console.log("UPDATE EXITOSO");
         alert("Usuario actualizado exitosamente");
-        localStorage.setItem("contrasena", formData.contrasena);
+        localStorage.setItem("contrasena", formData.contrasena || contrasena);
         navigate("/Presupuesto");
       } else {
         const errorResponse = await response.json();
@@ -145,15 +145,14 @@ export const Configuracion = () => {
 
         if (response.ok) {
           const data = await response.json();
-
           setFormData({
-            nombre: data.userData.nombre,
-            apellido: data.userData.apellido,
-            correo: data.userData.correo,
+            nombre: data.nombre,
+            apellido: data.apellido,
+            correo: data.correo,
             contrasenaAntigua: contrasena,
             contrasena: "",
             confirmContrasena: "",
-            perfil: data.userData.perfil,
+            perfil: data.perfil,
           });
         } else {
           console.error("Error al obtener datos del usuario");

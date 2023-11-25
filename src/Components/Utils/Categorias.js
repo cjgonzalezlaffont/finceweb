@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
@@ -13,22 +13,17 @@ export const Categorias = () => {
   const tokenWithoutQuotes = token.replace(/"/g, ""); // Elimina comillas si están presentes
   const authorizationHeader = `Bearer ${tokenWithoutQuotes}`;
 
-  useEffect(() => {
-    obtenerCategorias();
-  }, []);
-
-  const obtenerCategorias = async () => {
-    
+  const obtenerCategorias = useCallback(async () => {
     try {
       const response = await fetch(
         "http://localhost:8080/api/categories/" + id,
         {
           headers: {
-            Authorization : authorizationHeader
-          }
+            Authorization: authorizationHeader,
+          },
         }
-      )
-      if (response.status == 200) {
+      );
+      if (response.status === 200) {
         const data = await response.json();
         if (data) {
           const categorias = data;
@@ -44,11 +39,10 @@ export const Categorias = () => {
           alert(`Error: ${response.status} ${response.statusText}`);
         }
       }
-      
     } catch (error) {
       console.log(error.message);
     }
-  };
+  }, [id, authorizationHeader]);
 
   const [nuevaCategoria, setNuevaCategoria] = useState({
     nombre: "",
@@ -75,7 +69,7 @@ export const Categorias = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization :  authorizationHeader,
+            Authorization: authorizationHeader,
           },
           body: JSON.stringify(nuevaCategoria),
         }
@@ -96,12 +90,12 @@ export const Categorias = () => {
   const editarCategoria = async () => {
     if (nuevaCategoria) {
       const categoriaEdit = {
-        nombre : nuevaCategoria.nombre,
+        nombre: nuevaCategoria.nombre,
         montoMax: parseFloat(nuevaCategoria.montoMax),
         descripcion: nuevaCategoria.descripcion,
         tipo: nuevaCategoria.tipo,
       };
-      console.log("Cat: " + nuevaCategoria.id + "User: " + id)
+      console.log("Cat: " + nuevaCategoria.id + "User: " + id);
       const response = await fetch(
         "http://localhost:8080/api/categories/update/" +
           id +
@@ -111,15 +105,14 @@ export const Categorias = () => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization :  authorizationHeader,
+            Authorization: authorizationHeader,
           },
           body: JSON.stringify(categoriaEdit),
         }
       );
       try {
-
-        if (response.status == 200) {
-          console.log("Update exitoso")
+        if (response.status === 200) {
+          console.log("Update exitoso");
         } else {
           const errorResponse = await response.json();
           if (errorResponse.error) {
@@ -143,15 +136,12 @@ export const Categorias = () => {
 
   const eliminarCategoria = async (categoria) => {
     const response = await fetch(
-      "http://localhost:8080/api/categories/delete/" +
-        id +
-        "/" +
-        categoria.id,
+      "http://localhost:8080/api/categories/delete/" + id + "/" + categoria.id,
       {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization :  authorizationHeader
+          Authorization: authorizationHeader,
         },
       }
     );
@@ -172,6 +162,10 @@ export const Categorias = () => {
     setEditMode(true);
     setShowModal(true);
   };
+
+  useEffect(() => {
+    obtenerCategorias();
+  }, [obtenerCategorias]);
 
   return (
     <Container>
@@ -218,10 +212,7 @@ export const Categorias = () => {
                   <div className="row">
                     <div className="col-2 ps-4">{categoria.nombre}</div>
                     <div className="col-2">{categoria.montoMax}</div>
-                    <div
-                      className="col"
-                      style={{ overflow: "hidden" }}
-                    >
+                    <div className="col" style={{ overflow: "hidden" }}>
                       {categoria.descripcion}
                     </div>
                     <div className="col-2">
@@ -230,7 +221,7 @@ export const Categorias = () => {
                     <div className="col-1">
                       <button
                         className="me-1"
-                        style={{ border: "none", backgroundColor:"#fff" }}
+                        style={{ border: "none", backgroundColor: "#fff" }}
                         variant="info"
                         onClick={() => openEditModal(categoria)}
                       >
@@ -243,7 +234,11 @@ export const Categorias = () => {
                       <button
                         className="me-1"
                         variant="info"
-                        style={{ border: "none", backgroundColor:"#fff", marginLeft:"10px"}}
+                        style={{
+                          border: "none",
+                          backgroundColor: "#fff",
+                          marginLeft: "10px",
+                        }}
                         onClick={() => eliminarCategoria(categoria)}
                       >
                         <FontAwesomeIcon
@@ -264,10 +259,10 @@ export const Categorias = () => {
             onClick={() => navigate("/Presupuesto")}
           >
             Volver a presupuesto
-        </Button>
+          </Button>
         </Col>
       </Row>
-      
+
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>

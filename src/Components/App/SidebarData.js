@@ -4,6 +4,8 @@ import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
 import * as HiIcons from "react-icons/hi2";
 import * as BiIcons from "react-icons/bi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMedal } from "@fortawesome/free-solid-svg-icons";
 
 export const SidebarData = [
   {
@@ -33,7 +35,7 @@ export const SidebarData = [
   {
     title: "Objetivos",
     path: "/Objetivos",
-    icons: <FaIcons.FaBalanceScaleLeft />,
+    icons: <FontAwesomeIcon icon={faMedal} />,
     cName: "nav-text",
   },
   {

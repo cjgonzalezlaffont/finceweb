@@ -10,11 +10,11 @@ export const Simbolo = () => {
   const urlVentaActivo = "http://localhost:8080/api/portfolio/sellAsset/";
   const userId = localStorage.getItem("usuarioId");
   const token = sessionStorage.getItem("token").replace(/"/g, "");
-
   const [cantidadCompra, setCantidadCompra] = useState("");
   const [cantidadVenta, setCantidadVenta] = useState("");
   const [precioDeVenta, setPrecioDeVenta] = useState("");
-  console.log(cantidadVenta);
+
+  //console.log(cantidadVenta);
   // Función para manejar la compra del activo
   const handleCompraClick = async () => {
     // Lógica para consumir el endpoint de compra con la cantidad y datos del activo

@@ -58,8 +58,6 @@ export const Movimientos = () => {
         (cat) => cat.nombre === categoria
       );
 
-      //Correccion en las fechas asi quedan las de los activos y las tx iguales.
-
       const originalValue = fecha;
       const [anio, mes, dia] = originalValue.split("-");
       const fechaNuevoFormato = `${dia}/${mes}/${anio}`;

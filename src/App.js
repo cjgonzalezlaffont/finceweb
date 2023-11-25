@@ -1,5 +1,5 @@
 import "./App.css";
-import { Home } from "./Components/Home/Home";
+import { Home } from "./Components/Utils/Home";
 import { Cartera } from "./Components/App/Cartera";
 import { Configuracion } from "./Components/App/Configuracion";
 import { Inicio } from "./Components/App/Inicio";
