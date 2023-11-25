@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import { Card, Form, Button, Container } from "react-bootstrap";
 import { Modal, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import { FaInfoCircle } from "react-icons/fa";
 import { descriptions } from "../../Assets/strings.js";
 
 export const Registrar = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  //const tipoInversor = queryParams.get("tipoInversor");
+
   const urlCreateUser = "http://localhost:8080/api/users/";
   const [formData, setFormData] = useState({
     nombre: "",
@@ -18,7 +16,7 @@ export const Registrar = () => {
     correo: "",
     contrasena: "",
     confirmContrasena: "",
-    perfil: "",
+    perfil: 0,
   });
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -27,6 +25,7 @@ export const Registrar = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log("handleChange - Perfil:", formData.perfil);
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -42,12 +41,19 @@ export const Registrar = () => {
     }
   };
 
-  const handlePerfilChange = (e) => {
-    const { value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      perfil: value,
-    }));
+  const handleConservador = () => {
+    setSelectedPerfil("conservador");
+    setShowModal(true);
+  };
+
+  const handleModerado = () => {
+    setSelectedPerfil("moderado");
+    setShowModal(true);
+  };
+
+  const handleArriesgado = () => {
+    setSelectedPerfil("arriesgado");
+    setShowModal(true);
   };
 
   useEffect(() => {
@@ -62,17 +68,13 @@ export const Registrar = () => {
     }
   }, [formData.contrasena, formData.confirmContrasena]);
 
-  const handlePerfilSelection = (perfil) => {
-    setSelectedPerfil(perfil);
-    setShowModal(true);
-  };
-
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("handleSubmit - Perfil:", formData.perfil);
     try {
       const response = await fetch(urlCreateUser, {
         method: "POST",
@@ -81,7 +83,7 @@ export const Registrar = () => {
           apellido: formData.apellido,
           correo: formData.correo,
           contrasena: formData.contrasena,
-          perfil: tipoInversor,
+          perfil: formData.perfil,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -92,8 +94,9 @@ export const Registrar = () => {
         const data = await response.json();
         if (data) {
           sessionStorage.setItem("token", JSON.stringify(data.token));
-          localStorage.setItem("mail", JSON.stringify(data.user.correo));
+          localStorage.setItem("mail", JSON.stringify(data.correo));
           localStorage.setItem("usuarioId", data.userId);
+          localStorage.setItem("contrasena", formData.contrasena);
           console.log("Bienvenido a Fince!!");
           navigate("/Presupuesto");
         }
@@ -121,6 +124,7 @@ export const Registrar = () => {
       <Card className="w-50 mx-auto">
         <Card.Body>
           <Card.Title>Registro de Usuario</Card.Title>
+
           <Form className="align-content-center" onSubmit={handleSubmit}>
             <Form.Group controlId="nombre">
               <Form.Label>Nombre</Form.Label>
@@ -197,15 +201,20 @@ export const Registrar = () => {
                       <input
                         type="radio"
                         name="perfil"
-                        value="conservador"
-                        checked={formData.perfil === "conservador"}
-                        onChange={handlePerfilChange}
+                        value="0"
+                        checked={formData.perfil === 0}
+                        onChange={(e) =>
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            perfil: parseInt(e.target.value),
+                          }))
+                        }
                       />{" "}
                       <span className="ml-1">Conservador</span>
                       <Button
                         variant="link"
                         className="btn-link"
-                        onClick={() => handlePerfilSelection("conservador")}
+                        onClick={() => handleConservador()}
                       >
                         <FaInfoCircle />
                       </Button>
@@ -221,15 +230,20 @@ export const Registrar = () => {
                       <input
                         type="radio"
                         name="perfil"
-                        value="moderado"
-                        checked={formData.perfil === "moderado"}
-                        onChange={handleChange}
+                        value="1"
+                        checked={formData.perfil === 1}
+                        onChange={(e) =>
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            perfil: parseInt(e.target.value),
+                          }))
+                        }
                       />{" "}
                       <span className="ml-2">Moderado</span>
                       <Button
                         variant="link"
                         className="btn-link"
-                        onClick={() => handlePerfilSelection("moderado")}
+                        onClick={() => handleModerado()}
                       >
                         <FaInfoCircle />
                       </Button>
@@ -245,15 +259,20 @@ export const Registrar = () => {
                       <input
                         type="radio"
                         name="perfil"
-                        value="arriesgado"
-                        checked={formData.perfil === "arriesgado"}
-                        onChange={handleChange}
+                        value="2"
+                        checked={formData.perfil === 2}
+                        onChange={(e) =>
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            perfil: parseInt(e.target.value),
+                          }))
+                        }
                       />{" "}
                       <span className="ml-2">Arriesgado</span>
                       <Button
                         variant="link"
                         className="btn-link"
-                        onClick={() => handlePerfilSelection("arriesgado")}
+                        onClick={() => handleArriesgado()}
                       >
                         <FaInfoCircle />
                       </Button>

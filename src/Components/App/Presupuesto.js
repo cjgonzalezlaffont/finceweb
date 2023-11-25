@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import CardPresupuesto from "../Utils/CardPresupuesto";
-import { Row, Col, Button, Container, Card, CardBody} from "react-bootstrap";
+import { Row, Col, Button, Container, Card, CardBody } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export const Presupuesto = () => {
@@ -12,22 +12,17 @@ export const Presupuesto = () => {
   const [incomeAmount, setIncomeAmount] = useState(0);
   const [expenseAmount, setExpenseAmount] = useState(0);
 
-  useEffect(() => {
-    getTransactions();
-  }, []);
-
-  const getTransactions = async () => {
-    
+  const getTransactions = useCallback(async () => {
     try {
       const response = await fetch(
         "http://localhost:8080/api/transactions/getTransactions/" + id,
         {
           headers: {
-            Authorization : authorizationHeader
-          }
+            Authorization: authorizationHeader,
+          },
         }
-      )
-      if (response.status == 200) {
+      );
+      if (response.status === 200) {
         const data = await response.json();
         if (data) {
           setIncomeAmount(data.incomeAmount);
@@ -44,68 +39,75 @@ export const Presupuesto = () => {
           alert(`Error: ${response.status} ${response.statusText}`);
         }
       }
-      
     } catch (error) {
       console.log(error.message);
     }
-  };
+  }, [authorizationHeader, id]);
+
+  useEffect(() => {
+    getTransactions();
+  }, [getTransactions]);
 
   const deleteTransaction = async (tran) => {
+    const confirmacion = window.confirm(
+      "¿Está seguro que desea eliminar el registro?"
+    );
 
-      const confirmacion = window.confirm("¿Está seguro que desea eliminar el registro?");
+    if (confirmacion) {
+      const deleteTransaction = {
+        titulo: tran.titulo,
+        categoriaNombre: tran.categoriaNombre,
+        fecha: tran.fecha,
+        montoConsumido: tran.montoConsumido,
+        tipo: tran.tipo,
+        categoriaId: tran.categoriaId,
+        id: tran.id,
+      };
 
-      if (confirmacion) {
-        const deleteTransaction = {
-          titulo: tran.titulo, 
-          categoriaNombre: tran.categoriaNombre, 
-          fecha: tran.fecha, 
-          montoConsumido: tran.montoConsumido,
-          tipo: tran.tipo,
-          categoriaId: tran.categoriaId,
-          id: tran.id}
-    
-          const response = await fetch(
-            "http://localhost:8080/api/transactions/deleteTransaction/" +
-              id +
-              "/" +
-              tran.id,
-            {
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization :  authorizationHeader
-              },
-              body: JSON.stringify(deleteTransaction),
-            }
-          );
-          try {
-            const data = await response.json();
-            if (data.status == 200) {
-              alert("Transaccion eliminada con exito")
-            } else {
-              throw new Error(data.message);
-            }
-          } catch (error) {
-            console.log(error.message);
-          }
-          getTransactions();
+      const response = await fetch(
+        "http://localhost:8080/api/transactions/deleteTransaction/" +
+          id +
+          "/" +
+          tran.id,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: authorizationHeader,
+          },
+          body: JSON.stringify(deleteTransaction),
+        }
+      );
+      try {
+        const data = await response.json();
+        if (data.status === 200) {
+          alert("Transaccion eliminada con exito");
+        } else {
+          throw new Error(data.message);
+        }
+      } catch (error) {
+        console.log(error.message);
       }
-  }
+      getTransactions();
+    }
+  };
 
   return (
     <Container>
       <Row className="mt-4">
         <Col>
-          <Card  style={{width:"400px", borderRadius:"30px"}}>
+          <Card style={{ width: "400px", borderRadius: "30px" }}>
             <CardBody>
-              <a>SALDO INGRESADO </a> <strong style={{color:"green"}}>${incomeAmount}</strong>
+              <span>SALDO INGRESADO </span>{" "}
+              <strong style={{ color: "green" }}>${incomeAmount}</strong>
             </CardBody>
           </Card>
         </Col>
         <Col>
-          <Card style={{width:"400px", borderRadius:"30px"}}>
+          <Card style={{ width: "400px", borderRadius: "30px" }}>
             <CardBody>
-              <a>SALDO EGRESADO </a> <strong style={{color:"red"}}>${expenseAmount}</strong>
+              <span>SALDO EGRESADO </span>{" "}
+              <strong style={{ color: "red" }}>${expenseAmount}</strong>
             </CardBody>
           </Card>
         </Col>
@@ -146,13 +148,14 @@ export const Presupuesto = () => {
             </Card.Body>
           </Card>
           {transactions.map((tran, index) => (
-            <CardPresupuesto tran={tran}
-                             deleteTransaction={deleteTransaction}
+            <CardPresupuesto
+              tran={tran}
+              deleteTransaction={deleteTransaction}
             />
           ))}
         </Col>
       </Row>
-      <Row >
+      <Row>
         <Col>
           <Card className="bg-primary text-white mx-2 rounded-top">
             <Card.Body className="p-3">
@@ -160,7 +163,7 @@ export const Presupuesto = () => {
                 <div className="col-8">
                   <strong>Total:</strong>
                 </div>
-                <div className="col" style={{marginLeft:"20px"}}>
+                <div className="col" style={{ marginLeft: "20px" }}>
                   <strong>${incomeAmount - expenseAmount}</strong>
                 </div>
               </div>

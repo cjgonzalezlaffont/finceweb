@@ -9,7 +9,7 @@ export const BarChartComponent = ({ data }) => {
       <BarChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" tick={{ fontFamily: "Arial", fontSize: 8 }} />
-        <YAxis />
+        <YAxis tick={{ fontFamily: "Arial", fontSize: 8 }} />
         <Tooltip />
         <Legend />
         <Bar dataKey="ingresos" stackId="a" fill="#8884d8" />

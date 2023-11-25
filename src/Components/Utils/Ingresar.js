@@ -49,9 +49,9 @@ export const Ingresar = () => {
 
         if (data) {
           sessionStorage.setItem("token", JSON.stringify(data.token));
-          console.log(sessionStorage.getItem("token"));
           localStorage.setItem("mail", JSON.stringify(data.correo));
           localStorage.setItem("usuarioId", data.userId);
+          localStorage.setItem("contrasena", contrasena);
           console.log("Validacion Exitosa!");
           navigate("/Presupuesto");
         }

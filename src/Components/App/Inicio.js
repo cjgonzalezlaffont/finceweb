@@ -43,7 +43,7 @@ export const Inicio = () => {
   }, [token, userId]);
 
   return (
-    <Container className="mt-5 justify-content-center align-items-center vh-100">
+    <Container className="mt-5 p-5 justify-content-center align-items-center vh-100">
       <Row>
         <Col>
           <Container>
@@ -59,7 +59,7 @@ export const Inicio = () => {
           </Container>
         </Col>
       </Row>
-      <Row className="col-6 mt-5 justify-content-center ">
+      <Row className="col-12 mt-5">
         <Col>
           <Container className="col-6 mt-5 justify-content-center ">
             <MiniCardInicio datos={dataMiniCard} />

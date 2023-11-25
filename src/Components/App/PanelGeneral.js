@@ -122,7 +122,13 @@ export const PanelGeneral = () => {
               <td>{item.descripcion}</td>
               <td>{item.tipo_instrumento}</td>
               <td>{item.ultimoPrecio}</td>
-              <td>{item.variacionPorcentual}</td>
+              <td
+                className={
+                  item.variacionPorcentual >= 0 ? "text-success" : "text-danger"
+                }
+              >
+                {item.variacionPorcentual}
+              </td>
 
               {/* descripcion: "AMERICAN AIRLINES GROUP INC."
                  simbolo:"AAL"
