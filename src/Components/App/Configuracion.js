@@ -143,15 +143,16 @@ export const Configuracion = () => {
 
         if (response.ok) {
           const data = await response.json();
+          console.log("DATAAAAAAAAAAAAAAAAAAAAAAA");
           console.log(data);
           setFormData({
-            nombre: data.userData.nombre,
-            apellido: data.userData.apellido,
-            correo: data.userData.correo,
+            nombre: data.nombre,
+            apellido: data.apellido,
+            correo: data.correo,
             contrasenaAntigua: contrasena,
             contrasena: "",
             confirmContrasena: "",
-            perfil: data.userData.perfil,
+            perfil: data.perfil,
           });
         } else {
           console.error("Error al obtener datos del usuario");
