@@ -9,12 +9,10 @@ export const Home = () => {
     padding: "20px",
     borderRadius: "10px",
   };
-
   const imageContainerStyle = {
     width: "50%",
     margin: "0 auto",
   };
-
   return (
     <Container>
       <Row

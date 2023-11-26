@@ -25,7 +25,6 @@ export const Registrar = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log("handleChange - Perfil:", formData.perfil);
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -74,7 +73,6 @@ export const Registrar = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("handleSubmit - Perfil:", formData.perfil);
     try {
       const response = await fetch(urlCreateUser, {
         method: "POST",

@@ -45,8 +45,8 @@ export const Objetivos = () => {
   }, [token, userId, setObjetivos]);
 
   useEffect(() => {
-    fetchData(); // Llamamos a fetchData al montar el componente
-  }, [fetchData]); // Dependencia del useEffect
+    fetchData();
+  }, [fetchData]);
 
   const handleAgregarObjetivo = async () => {
     try {
@@ -60,7 +60,7 @@ export const Objetivos = () => {
       });
 
       if (response.ok) {
-        fetchData(); // Llamamos a fetchData después de agregar un objetivo
+        fetchData();
         closeModal();
       } else {
         throw new Error("Network response was not ok");

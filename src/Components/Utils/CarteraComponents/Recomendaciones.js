@@ -8,7 +8,7 @@ export const Recomendaciones = () => {
   //aca va el fetch para datosRecomendaciones
 
   return (
-    <Container className="mb-5">
+    <Container className="m-5">
       <Card>
         <Card.Header>
           <Card.Title

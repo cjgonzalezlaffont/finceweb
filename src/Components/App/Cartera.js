@@ -23,7 +23,6 @@ export const Cartera = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data.portfolio);
           setCarteraData(data.portfolio);
         } else {
           console.error("Error al obtener datos de la cartera");

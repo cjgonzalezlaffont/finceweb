@@ -86,7 +86,6 @@ export const Configuracion = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("handleSubmit - Contrasena:", formData.contrasena);
     try {
       const response = await fetch(urlUser + userId, {
         method: "PUT",
@@ -104,7 +103,6 @@ export const Configuracion = () => {
       });
 
       if (response.status === 200) {
-        console.log("UPDATE EXITOSO");
         alert("Usuario actualizado exitosamente");
         localStorage.setItem("contrasena", formData.contrasena || contrasena);
         navigate("/Presupuesto");
@@ -145,14 +143,15 @@ export const Configuracion = () => {
 
         if (response.ok) {
           const data = await response.json();
+          console.log(data);
           setFormData({
-            nombre: data.nombre,
-            apellido: data.apellido,
-            correo: data.correo,
+            nombre: data.userData.nombre,
+            apellido: data.userData.apellido,
+            correo: data.userData.correo,
             contrasenaAntigua: contrasena,
             contrasena: "",
             confirmContrasena: "",
-            perfil: data.perfil,
+            perfil: data.userData.perfil,
           });
         } else {
           console.error("Error al obtener datos del usuario");

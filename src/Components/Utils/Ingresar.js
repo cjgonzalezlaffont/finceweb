@@ -44,15 +44,12 @@ export const Ingresar = () => {
       });
 
       if (response.status === 200) {
-        //console.log(response);
         const data = await response.json();
-
         if (data) {
           sessionStorage.setItem("token", JSON.stringify(data.token));
           localStorage.setItem("mail", JSON.stringify(data.correo));
           localStorage.setItem("usuarioId", data.userId);
           localStorage.setItem("contrasena", contrasena);
-          console.log("Validacion Exitosa!");
           navigate("/Presupuesto");
         }
       } else {

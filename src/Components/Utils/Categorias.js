@@ -10,7 +10,7 @@ export const Categorias = () => {
   const id = localStorage.getItem("usuarioId");
   const [categorias, setCategorias] = useState([]);
   const token = sessionStorage.getItem("token");
-  const tokenWithoutQuotes = token.replace(/"/g, ""); // Elimina comillas si están presentes
+  const tokenWithoutQuotes = token.replace(/"/g, "");
   const authorizationHeader = `Bearer ${tokenWithoutQuotes}`;
 
   const obtenerCategorias = useCallback(async () => {

@@ -14,10 +14,7 @@ export const Simbolo = () => {
   const [cantidadVenta, setCantidadVenta] = useState("");
   const [precioDeVenta, setPrecioDeVenta] = useState("");
 
-  //console.log(cantidadVenta);
-  // Función para manejar la compra del activo
   const handleCompraClick = async () => {
-    // Lógica para consumir el endpoint de compra con la cantidad y datos del activo
     try {
       const response = await fetch(urlCompraActivo + userId, {
         method: "POST",
@@ -49,7 +46,6 @@ export const Simbolo = () => {
     console.log("Compra:", simboloData, "Cantidad:", cantidadCompra);
   };
 
-  // Función para manejar la venta del activo
   const handleVentaClick = async () => {
     try {
       const response = await fetch(urlVentaActivo + userId, {
