@@ -58,10 +58,11 @@ export const Movimientos = () => {
         (cat) => cat.nombre === categoria
       );
 
+      //Correccion en las fechas asi quedan las de los activos y las tx iguales.
+
       const originalValue = fecha;
       const [anio, mes, dia] = originalValue.split("-");
       const fechaNuevoFormato = `${dia}/${mes}/${anio}`;
-
       const newTransaction = {
         titulo: nombre,
         categoriaNombre: selectedCategory.nombre,
@@ -70,21 +71,19 @@ export const Movimientos = () => {
         tipo: selectedCategory.tipo,
         categoriaId: selectedCategory.id,
       };
-
-      const response = await fetch(
-        "http://localhost:8080/api/transactions/createTransaction/" + id,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newTransaction),
-        }
-      );
       try {
+        const response = await fetch(
+          "http://localhost:8080/api/transactions/createTransaction/" + id,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newTransaction),
+          }
+        );
         const data = await response.json();
-        console.log(data);
         if (response.status === 201) {
           navigate("/Presupuesto");
         } else {

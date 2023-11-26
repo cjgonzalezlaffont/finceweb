@@ -25,11 +25,8 @@ export const Inicio = () => {
             "Content-Type": "application/json",
           },
         });
-
         if (response.ok) {
           const data = await response.json();
-          console.log("DATA DE INICIO");
-          console.log(data);
           setDataBarChart(data);
         } else {
           throw new Error("Network response was not ok");
