@@ -9,6 +9,7 @@ export const Cartera = () => {
   const urlPortfolio = "http://localhost:8080/api/portfolio/getPortfolio/";
   const token = sessionStorage.getItem("token").replace(/"/g, "");
   const userId = localStorage.getItem("usuarioId");
+  const [isDataFetched, setIsDataFetched] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,19 +22,28 @@ export const Cartera = () => {
           },
         });
 
-        if (response.ok) {
+        if (!response.ok) {
+          console.error(`Error en fetch: ${response.status}`);
+          alert(`Error: recopilando datdos del usuario`);
+          return;
+        }
+        if (!isDataFetched) {
           const data = await response.json();
           setCarteraData(data.portfolio);
-        } else {
-          console.error("Error al obtener datos de la cartera");
+          setIsDataFetched(true);
         }
       } catch (error) {
-        console.error("Error en la solicitud:", error);
+        console.error("Error en la solicitud:", error.message);
+        alert(`Error en la solicitud: ${error.message}`);
       }
     };
 
-    fetchData();
-  }, [token, userId]);
+    if (!isDataFetched) {
+      console.log("FETCH");
+      fetchData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Container className="mb-5 mt-5">
@@ -49,8 +59,13 @@ export const Cartera = () => {
             </Link>
           </Card.Title>
         </Card.Header>
+
         <Card.Body>
-          <TablaCartera data={carteraData} />
+          {carteraData.length > 0 ? (
+            <TablaCartera data={carteraData} />
+          ) : (
+            <p>Recopilando datos disponibles.</p>
+          )}
         </Card.Body>
       </Card>
     </Container>

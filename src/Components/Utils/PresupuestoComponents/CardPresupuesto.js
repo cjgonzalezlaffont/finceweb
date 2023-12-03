@@ -12,10 +12,10 @@ const CardPresupuesto = (props) => {
       <Card className="mt-2 rounded">
         <Card.Body className="p-1">
           <div className="row">
-            <div className="col ps-4">{tran.titulo}</div>
-            <div className="col">{tran.categoriaNombre}</div>
-            <div className="col">{tran.fecha}</div>
-            <div className="col">{tran.montoConsumido}</div>
+            <div className="col-4 ps-4">{tran.titulo}</div>
+            <div className="col-4">{tran.categoriaNombre}</div>
+            <div className="col-2">{tran.fecha}</div>
+            <div className="col-1">{parseInt(tran.montoConsumido)}</div>
             <div style={{ display: "none" }}>{tran.id}</div>
             <div className="col-1">
               <button
@@ -28,7 +28,6 @@ const CardPresupuesto = (props) => {
                   icon={faTrashAlt}
                   style={{ color: "#f00000" }}
                 />{" "}
-                {/* Icono de borrar */}
               </button>
             </div>
           </div>

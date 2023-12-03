@@ -5,8 +5,7 @@ import { Card, Container, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export const Recomendaciones = () => {
-  //aca va el fetch para datosRecomendaciones
-
+  //fetch
   return (
     <Container className="m-5">
       <Card>

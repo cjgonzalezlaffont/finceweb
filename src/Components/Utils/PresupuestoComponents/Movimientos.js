@@ -96,9 +96,12 @@ export const Movimientos = () => {
   };
 
   return (
-    <Container>
-      <Row className="justify-content-center mt-4">
-        <Col md={8}>
+    <Container
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: "100vh" }}
+    >
+      <Row className="justify-content-center">
+        <Col md={10}>
           <Card>
             <Card.Header>Movimientos Financieros</Card.Header>
             <Card.Body>
@@ -150,16 +153,12 @@ export const Movimientos = () => {
                     </Col>
                     <Col>
                       <Link to="/Presupuesto">
-                        <Button variant="primary" style={{ width: "100%" }}>
-                          Ver Presupuesto
-                        </Button>
+                        <Button variant="primary">Ver Presupuesto</Button>
                       </Link>
                     </Col>
                     <Col>
                       <Link to="/Categorias">
-                        <Button variant="primary" style={{ width: "100%" }}>
-                          Ver Categorías
-                        </Button>
+                        <Button variant="primary">Ver Categorías</Button>
                       </Link>
                     </Col>
                   </Row>

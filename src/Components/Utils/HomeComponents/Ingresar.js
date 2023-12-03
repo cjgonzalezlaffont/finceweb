@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Form, Button } from "react-bootstrap";
+import { Card, Form, Button, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 export const Ingresar = () => {
@@ -63,37 +63,43 @@ export const Ingresar = () => {
   };
 
   return (
-    <Card className="w-50 mx-auto mt-5">
-      <Card.Body>
-        <Card.Title>Iniciar Sesión</Card.Title>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Correo Electrónico</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Ingresa tu correo electrónico"
-              value={correo}
-              onChange={handleCorreoChange}
-            />
-          </Form.Group>
+    <Container
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: "100vh" }}
+    >
+      <Card className="w-50 mx-auto mt-5">
+        <Card.Body>
+          <Card.Title>Iniciar Sesión</Card.Title>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Correo Electrónico</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Ingresa tu correo electrónico"
+                value={correo}
+                onChange={handleCorreoChange}
+              />
+            </Form.Group>
 
-          <Form.Group controlId="formBasicPassword">
-            <Form.Label>Contraseña</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Contraseña"
-              value={contrasena}
-              onChange={handleContrasenaChange}
-            />
-          </Form.Group>
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label className="mt-2">Contraseña</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Contraseña"
+                value={contrasena}
+                onChange={handleContrasenaChange}
+              />
+            </Form.Group>
 
-          {error && <p className="text-danger">{error}</p>}
-
-          <Button variant="primary" type="submit" className="mt-3">
-            Iniciar Sesión
-          </Button>
-        </Form>
-      </Card.Body>
-    </Card>
+            {error && <p className="text-danger">{error}</p>}
+            <Row className="justify-content-center">
+              <Button variant="primary" type="submit" className="col-4 mt-4">
+                Iniciar Sesión
+              </Button>
+            </Row>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };

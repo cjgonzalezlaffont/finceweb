@@ -3,8 +3,6 @@ import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 
 export const MiniCardInicio = ({ datos }) => {
-  console.log(datos);
-
   return (
     <Container className="mb-4 text-center">
       <Card className="bg-primary text-white mb-3 rounded-top">

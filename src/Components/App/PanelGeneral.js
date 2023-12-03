@@ -4,47 +4,55 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export const PanelGeneral = () => {
-  const [searchText, setSearchText] = useState("");
-  const [selectedOption, setSelectedOption] = useState("Todas");
   const urlStocks = "http://localhost:8080/api/instruments/TODOS";
   const token = sessionStorage.getItem("token").replace(/"/g, "");
   const userId = localStorage.getItem("usuarioId");
-
   const [panelGeneralData, setData] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [selectedOption, setSelectedOption] = useState("Todas");
+  const [filteredData, setFilteredData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch(urlStocks, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+      const response = await fetch(urlStocks, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-        if (response.ok) {
-          const data = await response.json();
-          setData(data);
+      try {
+        const responseBody = await response.json();
+        if (
+          responseBody &&
+          Array.isArray(responseBody) &&
+          responseBody.length > 0
+        ) {
+          setData(responseBody);
         } else {
-          console.error("Error al obtener datos del Panel General");
+          alert("Servidor IOL no responde intente más tarde");
         }
       } catch (error) {
-        console.error("Error en la solicitud:", error);
+        alert("Error al procesar la respuesta del servidor");
+        console.error("Error Fince en la solicitud:", error);
       }
     };
-
     fetchData();
   }, [token, userId]);
 
-  const filteredData = panelGeneralData.filter((item) => {
-    const includesSearchText = item.tipo_instrumento
-      .toLowerCase()
-      .includes(searchText.toLowerCase());
-    const matchesSelectedOption =
-      selectedOption === "Todas" || item.tipo_instrumento === selectedOption;
-    return includesSearchText && matchesSelectedOption;
-  });
+  useEffect(() => {
+    const filteredData = panelGeneralData.filter((item) => {
+      const includesSearchText = item.simbolo
+        .toLowerCase()
+        .includes(searchText.toLowerCase());
+      const matchesSelectedOption =
+        selectedOption === "Todas" || item.tipo_instrumento === selectedOption;
+      return includesSearchText && matchesSelectedOption;
+    });
+
+    setFilteredData(filteredData);
+  }, [panelGeneralData, searchText, selectedOption, setFilteredData]);
 
   return (
     <Container>
@@ -56,7 +64,7 @@ export const PanelGeneral = () => {
           <Form.Group>
             <Form.Control
               type="text"
-              placeholder="Buscar por símbolo"
+              placeholder="Buscar por símbolo..."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
@@ -67,6 +75,7 @@ export const PanelGeneral = () => {
             <Form.Control
               placeholder=""
               as="select"
+              style={{ fontSize: "12px" }}
               value={selectedOption}
               onChange={(e) => setSelectedOption(e.target.value)}
             >
@@ -82,62 +91,60 @@ export const PanelGeneral = () => {
           </Form.Group>
         </Col>
       </Row>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>Símbolo</th>
-            <th>Nombre</th>
-            <th>Tipo</th>
-            <th>Precio</th>
-            <th>Variación Diaria</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.map((item, index) => (
-            <tr key={index}>
-              <td>
-                <Link
-                  to={`/Simbolo/${item.simbolo}`}
-                  state={{
-                    simbolo: item.simbolo,
-                    nombre: item.descripcion,
-                    tipo: item.tipo_instrumento,
-                    cantidad: 0,
-                    valorActual: item.ultimoPrecio,
-                    valorDeCompra: 0,
-                    variacion: item.variacionPorcentual,
-                  }}
-                >
-                  {/* {activo.simbolo}
-                        {activo.nombre}
-                        {activo.cantidad}
-                        {activo.valorDeCompra}
-                        {activo.variacion}
-                        {activo.valorActual}*/}
-
-                  {item.simbolo}
-                </Link>
-              </td>
-              <td>{item.descripcion}</td>
-              <td>{item.tipo_instrumento}</td>
-              <td>{item.ultimoPrecio}</td>
-              <td
-                className={
-                  item.variacionPorcentual >= 0 ? "text-success" : "text-danger"
-                }
-              >
-                {item.variacionPorcentual}
-              </td>
-
-              {/* descripcion: "AMERICAN AIRLINES GROUP INC."
-                 simbolo:"AAL"
-                 tipo_instrumento:"cedears"
-                 ultimoPrecio:5204.5
-                 variacionPorcentual:3.24 */}
+      <div className="table-responsive">
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th className="col-1">Símbolo</th>
+              <th className="col-7">Nombre</th>
+              <th className="col-2">Tipo</th>
+              <th className="col-1">Precio</th>
+              <th className="col-1">Variación</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {filteredData.length > 0 ? (
+              filteredData.map((item, index) => (
+                <tr key={index}>
+                  <td className="col-1">
+                    <Link
+                      to={`/Simbolo/${item.simbolo}`}
+                      state={{
+                        simbolo: item.simbolo,
+                        nombre: item.descripcion,
+                        tipo: item.tipo_instrumento,
+                        cantidad: 0,
+                        valorActual: item.ultimoPrecio,
+                        valorDeCompra: 0,
+                        variacion: item.variacionPorcentual,
+                      }}
+                    >
+                      {item.simbolo}
+                    </Link>
+                  </td>
+                  <td className="col-7">{item.descripcion}</td>
+                  <td className="col-1">{item.tipo_instrumento}</td>
+                  <td className="col-1">{item.ultimoPrecio}</td>
+                  <td
+                    colSpan="2"
+                    className={
+                      item.variacionPorcentual >= 0
+                        ? "text-success"
+                        : "text-danger"
+                    }
+                  >
+                    {item.variacionPorcentual}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <div>
+                <p>Obteniendo datos...</p>
+              </div>
+            )}
+          </tbody>
+        </Table>
+      </div>
     </Container>
   );
 };

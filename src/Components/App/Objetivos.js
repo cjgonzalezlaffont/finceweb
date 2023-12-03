@@ -44,10 +44,6 @@ export const Objetivos = () => {
     }
   }, [token, userId, setObjetivos]);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
   const handleAgregarObjetivo = async () => {
     try {
       const response = await fetch(urlCrearObjetivo + userId, {
@@ -170,7 +166,7 @@ export const Objetivos = () => {
                 <Card.Text>{objetivo.descripcion}</Card.Text>
                 <Card.Text>{objetivo.monto}</Card.Text>
                 <Card.Text>{objetivo.fecha}</Card.Text>
-                <Card.Text>{objetivo.progreso}%</Card.Text>
+                <Card.Text>{parseInt(objetivo.progreso * 100)}%</Card.Text>
                 <div className="d-flex justify-content-between">
                   <Button onClick={() => openModal(index)}>Editar</Button>
                   <Button

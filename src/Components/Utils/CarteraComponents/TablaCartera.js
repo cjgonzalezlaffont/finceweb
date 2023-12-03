@@ -1,6 +1,7 @@
 import React from "react";
 import { Table, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import "./TablaCartera.css";
 
 export const TablaCartera = ({ data }) => {
   const navigate = useNavigate();
@@ -20,19 +21,19 @@ export const TablaCartera = ({ data }) => {
             <strong>Nombre</strong>
           </th>
           <th>
-            <strong>Cantidad</strong>
+            <strong>Cant.</strong>
           </th>
           <th>
-            <strong>Valor de Compra</strong>
+            <strong>Precio Comp.</strong>
           </th>
           <th>
             <strong>Variación</strong>
           </th>
           <th>
-            <strong>Valor Actual</strong>
+            <strong>Precio Act.</strong>
           </th>
           <th>
-            <strong>Detalles</strong>
+            <strong>Info</strong>
           </th>
         </tr>
       </thead>
@@ -50,8 +51,12 @@ export const TablaCartera = ({ data }) => {
             </td>
             <td>{activo.valorActual}</td>
             <td>
-              <Button variant="info" onClick={() => handleButtonClick(activo)}>
-                Ver Detalles
+              <Button
+                style={{ fontSize: "12px" }}
+                variant="info"
+                onClick={() => handleButtonClick(activo)}
+              >
+                Ver
               </Button>
             </td>
           </tr>

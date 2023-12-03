@@ -1,32 +1,31 @@
 import React, { useEffect, useState, useCallback } from "react";
-import CardPresupuesto from "../Utils/CardPresupuesto";
+import CardPresupuesto from "../Utils/PresupuestoComponents/CardPresupuesto";
 import { Row, Col, Button, Container, Card, CardBody } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export const Presupuesto = () => {
-  const id = localStorage.getItem("usuarioId");
-  const token = sessionStorage.getItem("token");
-  const tokenWithoutQuotes = token.replace(/"/g, ""); // Elimina comillas si están presentes
-  const authorizationHeader = `Bearer ${tokenWithoutQuotes}`;
+  const urlDelete = "http://localhost:8080/api/transactions/deleteTransaction/";
+  const urlGetTrans = "http://localhost:8080/api/transactions/getTransactions/";
+  const userId = localStorage.getItem("usuarioId");
+  const token = sessionStorage.getItem("token").replace(/"/g, "");
   const [transactions, setTransactions] = useState([]);
   const [incomeAmount, setIncomeAmount] = useState(0);
   const [expenseAmount, setExpenseAmount] = useState(0);
 
   const getTransactions = useCallback(async () => {
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/transactions/getTransactions/" + id,
-        {
-          headers: {
-            Authorization: authorizationHeader,
-          },
-        }
-      );
+      const response = await fetch(urlGetTrans + userId, {
+        headers: {
+          method: "GET",
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
       if (response.status === 200) {
         const data = await response.json();
         if (data) {
-          setIncomeAmount(data.incomeAmount);
-          setExpenseAmount(data.expenseAmount);
+          setIncomeAmount(parseInt(data.incomeAmount));
+          setExpenseAmount(parseInt(data.expenseAmount));
           setTransactions(data.transactions);
         }
       } else {
@@ -42,7 +41,7 @@ export const Presupuesto = () => {
     } catch (error) {
       console.log(error.message);
     }
-  }, [authorizationHeader, id]);
+  }, [userId, token]);
 
   useEffect(() => {
     getTransactions();
@@ -54,36 +53,31 @@ export const Presupuesto = () => {
     );
 
     if (confirmacion) {
-      const deleteTransaction = {
+      const transactionToDelete = {
         titulo: tran.titulo,
-        categoriaNombre: tran.categoriaNombre,
-        fecha: tran.fecha,
-        montoConsumido: tran.montoConsumido,
-        tipo: tran.tipo,
         categoriaId: tran.categoriaId,
+        categoriaNombre: tran.categoriaNombre,
+        montoConsumido: tran.montoConsumido,
+        fecha: tran.fecha,
+        tipo: tran.tipo,
         id: tran.id,
       };
 
-      const response = await fetch(
-        "http://localhost:8080/api/transactions/deleteTransaction/" +
-          id +
-          "/" +
-          tran.id,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: authorizationHeader,
-          },
-          body: JSON.stringify(deleteTransaction),
-        }
-      );
+      const response = await fetch(urlDelete + userId, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(transactionToDelete),
+      });
       try {
-        const data = await response.json();
-        if (data.status === 200) {
+        const res = await response.json();
+
+        if (res.status === 200) {
           alert("Transaccion eliminada con exito");
         } else {
-          throw new Error(data.message);
+          throw new Error(res.message);
         }
       } catch (error) {
         console.log(error.message);
@@ -93,7 +87,7 @@ export const Presupuesto = () => {
   };
 
   return (
-    <Container>
+    <Container className="mb-2">
       <Row className="mt-4">
         <Col>
           <Card style={{ width: "400px", borderRadius: "30px" }}>
@@ -129,16 +123,16 @@ export const Presupuesto = () => {
           <Card className="bg-primary text-white mx-2 rounded-top">
             <Card.Body className="p-3">
               <div className="row">
-                <div className="col">
+                <div className="col-4">
                   <strong>Nombre</strong>
                 </div>
-                <div className="col">
+                <div className="col-4">
                   <strong>Categoría</strong>
                 </div>
-                <div className="col">
+                <div className="col-2">
                   <strong>Fecha</strong>
                 </div>
-                <div className="col">
+                <div className="col-1">
                   <strong>Monto</strong>
                 </div>
                 <div className="col-1">
@@ -147,12 +141,24 @@ export const Presupuesto = () => {
               </div>
             </Card.Body>
           </Card>
-          {transactions.map((tran, index) => (
-            <CardPresupuesto
-              tran={tran}
-              deleteTransaction={deleteTransaction}
-            />
-          ))}
+
+          <>
+            {transactions.length > 0 ? (
+              transactions.map((tran, index) => (
+                <CardPresupuesto
+                  key={tran.id}
+                  tran={tran}
+                  deleteTransaction={deleteTransaction}
+                />
+              ))
+            ) : (
+              <div>
+                <br />
+                <p>Recopilando datos</p>
+                <br />
+              </div>
+            )}
+          </>
         </Col>
       </Row>
       <Row>

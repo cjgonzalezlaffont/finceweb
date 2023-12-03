@@ -32,7 +32,7 @@ export const Configuracion = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log("handleChange - Contrasena:", formData.contrasena);
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -143,8 +143,6 @@ export const Configuracion = () => {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("DATAAAAAAAAAAAAAAAAAAAAAAA");
-          console.log(data);
           setFormData({
             nombre: data.nombre,
             apellido: data.apellido,
@@ -166,10 +164,7 @@ export const Configuracion = () => {
   }, [userId, token, contrasena]);
 
   return (
-    <Container
-      className="mt-3 d-flex justify-content-center align-items-center"
-      style={{ height: "100vh" }}
-    >
+    <Container className="mt-3 mb-3 d-flex justify-content-center align-items-center">
       <Card className="w-50 mx-auto">
         <Card.Body>
           <Card.Title>Configuración</Card.Title>

@@ -1,70 +1,39 @@
-# Getting Started with Create React App
+# Fince App Web
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Descripción
 
-## Available Scripts
+Fince Web App es una aplicación financiera que te ayuda a gestionar tus movimientos y llevar un seguimiento de tus ingresos y gastos que brinda información del mercado de valores.
 
-In the project directory, you can run:
+## Características
 
-### `npm start`
+- Registro de transacciones: Agrega nuevos movimientos financieros con detalles y categorías.
+- Visualización de saldos: muestra el saldo total ingresado y el saldo total egresado.
+- Acceso al mercado de Valores: puede consultar los valores actuales de acciones, fondos comunes
+  de inversion, bonos, y obligaciones negociables, desde el panel general y registrar la compra de sus activos.
+- Seguimiento de cartera: permite visualizar todas sus posiciones, y realizar compra y venta de activos desde Cartera.
+- Objetivos personales: establezca metas anuales y conozca su progreso.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Tecnologías Utilizadas
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- React
+- Bootstrap
 
-### `npm test`
+### Librerías
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Recharts : gráfico de barras ingresos vs egresos mensuales, en Inicio
 
-### `npm run build`
+## Instalación
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Client Web:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Clone el repositorio: `git clone https://github.com/cjgonzalezlaffont/finceweb.git`
+2. Instale las dependencias: `npm install`
+3. Inicie la app: `npm start`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Server:
 
-### `npm run eject`
+- Backend: `http://github.com/xxnanuxx/fince.git`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### Sugerimos ver nuestro client Mobile:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Android: `https://github.com/cjgonzalezlaffont/finceMobile.git`

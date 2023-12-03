@@ -1,35 +1,37 @@
 import React from "react";
-import * as FaIcons from "react-icons/fa";
-import * as AiIcons from "react-icons/ai";
-import * as IoIcons from "react-icons/io";
-import * as HiIcons from "react-icons/hi2";
-import * as BiIcons from "react-icons/bi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMedal } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMedal,
+  faWallet,
+  faHouse,
+  faCartPlus,
+  faScrewdriverWrench,
+  faMoneyBillTrendUp,
+} from "@fortawesome/free-solid-svg-icons";
 
 export const SidebarData = [
   {
     title: "Inicio",
     path: "/Inicio",
-    icons: <AiIcons.AiFillHome />,
+    icons: <FontAwesomeIcon icon={faHouse} />,
     cName: "nav-text",
   },
   {
     title: "Cartera",
     path: "/Cartera",
-    icons: <FaIcons.FaCartPlus />,
+    icons: <FontAwesomeIcon icon={faCartPlus} />,
     cName: "nav-text",
   },
   {
     title: "Presupuesto",
     path: "/Presupuesto",
-    icons: <BiIcons.BiSolidWallet />,
+    icons: <FontAwesomeIcon icon={faWallet} />,
     cName: "nav-text",
   },
   {
     title: "Panel General",
     path: "/PanelGeneral",
-    icons: <IoIcons.IoIosPaper />,
+    icons: <FontAwesomeIcon icon={faMoneyBillTrendUp} />,
     cName: "nav-text",
   },
   {
@@ -41,7 +43,7 @@ export const SidebarData = [
   {
     title: "Configuracion",
     path: "/Configuracion",
-    icons: <HiIcons.HiWrenchScrewdriver />,
+    icons: <FontAwesomeIcon icon={faScrewdriverWrench} />,
     cName: "nav-text",
   },
 ];

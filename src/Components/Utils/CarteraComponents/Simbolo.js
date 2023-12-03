@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Container, Card, Button, Form, Row, Col } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import "./Simbolo.css";
 
 export const Simbolo = () => {
   const navigate = useNavigate();
@@ -124,17 +127,17 @@ export const Simbolo = () => {
     const formattedDay = day < 10 ? `0${day}` : day;
     const formattedMonth = month < 10 ? `0${month}` : month;
 
-    // Devolver la fecha en el formato deseado
+    // Devolver la fecha en el formato que usamos
     return `${formattedDay}/${formattedMonth}/${year}`;
   };
 
   return (
-    <Container className="d-flex align-items-center justify-content-center mt-5">
-      <Card className="col-6 align-items-center justify-content-between mt-5">
+    <Container className="d-flex align-items-center justify-content-center mt-5 mb-5">
+      <Card className="col-7 align-items-center justify-content-between mt-5">
         <Card.Header className="col-12 align-items-center justify-content-between">
           <Row>
             <Col>
-              <Card.Text>Simbolo</Card.Text>
+              <Card.Title>SIMBOLO</Card.Title>
             </Col>
             <Col>
               <Button
@@ -193,80 +196,91 @@ export const Simbolo = () => {
           </Row>
         </Card.Body>
         <Card.Footer className="d-flex justify-content-center flex-column align-items-center">
-          <Row className="mb-4 mt-3">
-            <Col>
-              <Button
-                className="ms-5"
-                variant="outline-secondary"
-                onClick={handleDecrementCompra}
-              >
-                -
-              </Button>
-            </Col>
-            <Col>
-              <Form.Control
-                value={cantidadCompra}
-                placeholder="Cantidad"
-                onChange={(e) => handleCantidadCompraChange(e.target.value)}
-              />
-            </Col>
-            <Col>
-              <Button
-                variant="outline-secondary"
-                onClick={handleIncrementCompra}
-                className="m-0"
-              >
-                +
-              </Button>
-            </Col>
-            <Col>
-              <Button
-                className="ms-5"
-                variant="primary"
-                onClick={handleCompraClick}
-              >
-                Comprar
-              </Button>
-            </Col>
-          </Row>
+          <div className="rounded-container">
+            <Row className="mb-4 mt-3 p-2">
+              <Col>
+                <Button
+                  className="round-button ms-5"
+                  variant="outline-secondary"
+                  onClick={handleDecrementCompra}
+                >
+                  <FontAwesomeIcon icon={faMinus} />
+                </Button>
+              </Col>
+              <Col>
+                <Form.Control
+                  className="m-0"
+                  value={cantidadCompra}
+                  placeholder="Cantidad"
+                  onChange={(e) => handleCantidadCompraChange(e.target.value)}
+                />
+              </Col>
+              <Col>
+                <Button
+                  className="round-button m-0"
+                  variant="outline-secondary"
+                  onClick={handleIncrementCompra}
+                >
+                  <FontAwesomeIcon icon={faPlus} />
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  className="ms-0"
+                  style={{ fontSize: "12px" }}
+                  variant="primary"
+                  onClick={handleCompraClick}
+                >
+                  Comprar
+                </Button>
+              </Col>
+            </Row>
+          </div>
+          <div className="rounded-container">
+            <Row className="mb-2">
+              <Col>
+                <Button
+                  className="round-button ms-5"
+                  variant="outline-secondary"
+                  onClick={handleDecrementVenta}
+                >
+                  <FontAwesomeIcon icon={faMinus} />
+                </Button>
+              </Col>
+              <Col>
+                <Form.Control
+                  className="m-0"
+                  value={cantidadVenta}
+                  placeholder="Cantidad"
+                  onChange={(e) => handleCantidadVentaChange(e.target.value)}
+                />
+              </Col>
+              <Col>
+                <Button
+                  className="round-button"
+                  variant="outline-secondary"
+                  onClick={handleIncrementVenta}
+                >
+                  <FontAwesomeIcon icon={faPlus} />
+                </Button>
+              </Col>
+              <Col className="ms-0 p-2">
+                <Button variant="danger" onClick={handleVentaClick}>
+                  Vender
+                </Button>
+              </Col>
 
-          <Row className="mb-2">
-            <Col lg={4}>
-              <Form.Control
-                value={precioDeVenta}
-                placeholder="Ingrese el precio de Venta"
-                onChange={(e) => handlePrecioDeVentaChange(e.target.value)}
-              />
-            </Col>
-            <Col>
-              <Button
-                variant="outline-secondary"
-                onClick={handleDecrementVenta}
-              >
-                -
-              </Button>
-            </Col>
-            <Col>
-              <Form.Control
-                value={cantidadVenta}
-                placeholder="Cantidad"
-                onChange={(e) => handleCantidadVentaChange(e.target.value)}
-              />
-            </Col>
-            <Col>
-              <Button
-                variant="outline-secondary"
-                onClick={handleIncrementVenta}
-              >
-                +
-              </Button>
-            </Col>
-            <Col className="ms-1">
-              <Button variant="danger" onClick={handleVentaClick}>
-                Vender
-              </Button>
-            </Col>
-          </Row>
+              <Row>
+                <Col className="mt-3 ms-5 col-8">
+                  <Form.Control
+                    value={precioDeVenta}
+                    placeholder="Ingrese el precio de Venta..."
+                    onChange={(e) => handlePrecioDeVentaChange(e.target.value)}
+                  />
+                </Col>
+              </Row>
+            </Row>
+          </div>
         </Card.Footer>
       </Card>
     </Container>

@@ -1,0 +1,16 @@
+.round-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rounded-container {
+  border: 1px solid gray;
+  border-radius: 10px; /* Ajusta el valor según sea necesario */
+  padding: 10px;
+  margin-bottom: 10px;
+  border-color: gray;
+}

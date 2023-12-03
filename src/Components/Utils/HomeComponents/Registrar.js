@@ -4,12 +4,15 @@ import { Card, Form, Button, Container } from "react-bootstrap";
 import { Modal, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FaInfoCircle } from "react-icons/fa";
-import { descriptions } from "../../Assets/strings.js";
+import { descriptions } from "../../../Assets/strings.js";
 
 export const Registrar = () => {
   const navigate = useNavigate();
 
+  const urlVerifyEmail = "http://localhost:8080/api/users/verifyEmail/";
+  const urlSendCode = "http://localhost:8080/api/users/sendAuthCode/";
   const urlCreateUser = "http://localhost:8080/api/users/";
+
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
@@ -18,10 +21,14 @@ export const Registrar = () => {
     confirmContrasena: "",
     perfil: 0,
   });
+
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [showModal1, setShowModal1] = useState(false);
+  const [showModal2, setShowModal2] = useState(false);
   const [selectedPerfil, setSelectedPerfil] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [codeInput, setCodeInput] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,17 +49,17 @@ export const Registrar = () => {
 
   const handleConservador = () => {
     setSelectedPerfil("conservador");
-    setShowModal(true);
+    setShowModal1(true);
   };
 
   const handleModerado = () => {
     setSelectedPerfil("moderado");
-    setShowModal(true);
+    setShowModal1(true);
   };
 
   const handleArriesgado = () => {
     setSelectedPerfil("arriesgado");
-    setShowModal(true);
+    setShowModal1(true);
   };
 
   useEffect(() => {
@@ -67,11 +74,15 @@ export const Registrar = () => {
     }
   }, [formData.contrasena, formData.confirmContrasena]);
 
-  const handleCloseModal = () => {
-    setShowModal(false);
+  const handleCloseModal1 = () => {
+    setShowModal1(false);
   };
 
-  const handleSubmit = async (e) => {
+  const handleCloseModal2 = () => {
+    setShowModal2(false);
+  };
+
+  /* const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await fetch(urlCreateUser, {
@@ -112,14 +123,85 @@ export const Registrar = () => {
       console.error(error.message);
       alert(error.message);
     }
+  }; */
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // 1. Enviar código de autenticación al correo
+    const resVerifMail = await fetch(urlVerifyEmail + formData.correo, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log(resVerifMail);
+
+    if (resVerifMail.status === 200) {
+      const codeResponse = await fetch(urlSendCode + formData.correo, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const codeData = await codeResponse.json();
+      console.log(codeData.authCode);
+      setVerificationCode(codeData.authCode);
+
+      // 2. Abrir modal para ingresar código
+      setShowModal2(true);
+    } else {
+      const errorResponse = await resVerifMail.json();
+      console.error(`Error: ${resVerifMail.status} ${errorResponse.message}`);
+      alert(`Error: ${resVerifMail.status} ${errorResponse.error}`);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    console.log(codeInput);
+    console.log(verificationCode);
+
+    if (codeInput === verificationCode) {
+      const response = await fetch(urlCreateUser, {
+        method: "POST",
+        body: JSON.stringify({
+          nombre: formData.nombre,
+          apellido: formData.apellido,
+          correo: formData.correo,
+          contrasena: formData.contrasena,
+          perfil: formData.perfil,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.status === 201) {
+        const data = await response.json();
+        if (data) {
+          sessionStorage.setItem("token", JSON.stringify(data.token));
+          localStorage.setItem("mail", JSON.stringify(data.correo));
+          localStorage.setItem("usuarioId", data.userId);
+          localStorage.setItem("contrasena", formData.contrasena);
+          console.log("Bienvenido a Fince!!");
+          navigate("/Presupuesto");
+        }
+      } else {
+        const errorResponse = await response.json();
+        console.error(`Error: ${response.status} ${errorResponse.error}`);
+        alert(`Error: ${response.status} ${errorResponse.error}`);
+      }
+    } else {
+      alert("Código incorrecto. Inténtelo de nuevo.");
+      setShowModal2(true);
+    }
   };
 
   return (
-    <Container
-      className="d-flex justify-content-center align-items-center"
-      style={{ height: "100vh" }}
-    >
-      <Card className="w-50 mx-auto">
+    <Container className="d-flex m-4 justify-content-center align-items-center">
+      <Card className="w-75 mx-auto">
         <Card.Body>
           <Card.Title>Registro de Usuario</Card.Title>
 
@@ -193,7 +275,7 @@ export const Registrar = () => {
 
             <Row>
               <Col>
-                <Form.Group controlId="perfil" className="mt-2">
+                <Form.Group controlId="perfil" className="mt-2 ms-3">
                   <div className="mb-2">
                     <label className="d-flex align-items-center">
                       <input
@@ -279,19 +361,41 @@ export const Registrar = () => {
                 </Form.Group>
               </Col>
             </Row>
-            <Row>
-              <Button variant="primary" type="submit" className="mt-3">
-                Registrarse
-              </Button>
-            </Row>
+            <Container className="text-center mt-3">
+              <Row>
+                <Col>
+                  <Button variant="primary" type="submit" className="btn">
+                    Registrarse
+                  </Button>
+                </Col>
+              </Row>
+            </Container>
           </Form>
         </Card.Body>
       </Card>
-      <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal centered show={showModal1} onHide={handleCloseModal1}>
         <Modal.Header closeButton>
           <Modal.Title>Descripción del perfil {selectedPerfil}</Modal.Title>
         </Modal.Header>
         <Modal.Body>{descriptions[selectedPerfil]}</Modal.Body>
+      </Modal>
+
+      <Modal centered show={showModal2} onHide={handleCloseModal2}>
+        <Modal.Header closeButton>
+          <Modal.Title>Verificación de Código</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Se ha enviado un código a su correo. Ingréselo a continuación:</p>
+          <Form.Control
+            type="text"
+            placeholder="Código"
+            value={codeInput}
+            onChange={(e) => setCodeInput(parseInt(e.target.value))}
+          />
+          <Button variant="primary" className="mt-2" onClick={handleVerifyCode}>
+            Verificar Código
+          </Button>
+        </Modal.Body>
       </Modal>
     </Container>
   );
