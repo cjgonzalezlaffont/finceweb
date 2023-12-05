@@ -39,6 +39,13 @@ export const Home = () => {
                 </Link>
               </div>
             </Card.Body>
+            <Card.Footer>
+              <div className="text-center">
+                <Link to="/Recordar" className="text-light">
+                  ¿Olvido su contraseña?
+                </Link>
+              </div>
+            </Card.Footer>
           </Card>
         </Col>
       </Row>

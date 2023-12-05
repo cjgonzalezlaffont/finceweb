@@ -82,53 +82,9 @@ export const Registrar = () => {
     setShowModal2(false);
   };
 
-  /* const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(urlCreateUser, {
-        method: "POST",
-        body: JSON.stringify({
-          nombre: formData.nombre,
-          apellido: formData.apellido,
-          correo: formData.correo,
-          contrasena: formData.contrasena,
-          perfil: formData.perfil,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.status === 201) {
-        const data = await response.json();
-        if (data) {
-          sessionStorage.setItem("token", JSON.stringify(data.token));
-          localStorage.setItem("mail", JSON.stringify(data.correo));
-          localStorage.setItem("usuarioId", data.userId);
-          localStorage.setItem("contrasena", formData.contrasena);
-          console.log("Bienvenido a Fince!!");
-          navigate("/Presupuesto");
-        }
-      } else {
-        const errorResponse = await response.json();
-        if (errorResponse.error) {
-          console.error(`Error: ${response.status} ${errorResponse.error}`);
-          alert(`Error: ${response.status} ${errorResponse.error}`);
-        } else {
-          console.error(`Error: ${response.status} ${response.statusText}`);
-          alert(`Error: ${response.status} ${response.statusText}`);
-        }
-      }
-    } catch (error) {
-      console.error(error.message);
-      alert(error.message);
-    }
-  }; */
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 1. Enviar código de autenticación al correo
     const resVerifMail = await fetch(urlVerifyEmail + formData.correo, {
       method: "GET",
       headers: {
@@ -138,7 +94,7 @@ export const Registrar = () => {
 
     console.log(resVerifMail);
 
-    if (resVerifMail.status === 200) {
+    if (resVerifMail.status === 404) {
       const codeResponse = await fetch(urlSendCode + formData.correo, {
         method: "POST",
         headers: {

@@ -8,6 +8,7 @@ import { PanelGeneral } from "./Components/App/PanelGeneral";
 import { Presupuesto } from "./Components/App/Presupuesto";
 import { Menu } from "./Components/Utils/MenuComponents/Menu";
 import { Ingresar } from "./Components/Utils/HomeComponents/Ingresar";
+import { Recordar } from "./Components/Utils/HomeComponents/Recordar";
 import { Registrar } from "./Components/Utils/HomeComponents/Registrar";
 import { Categorias } from "./Components/Utils/PresupuestoComponents/Categorias";
 import { Simbolo } from "./Components/Utils/CarteraComponents/Simbolo";
@@ -60,6 +61,7 @@ export default function App() {
           <Route path="/Ingresar" element={<Ingresar />} />
           <Route path="/Registrar" element={<Registrar />} />
           <Route path="/Presupuesto" element={<Presupuesto />} />
+          <Route path="/Recordar" element={<Recordar />} />
         </Routes>
       )}
     </>
